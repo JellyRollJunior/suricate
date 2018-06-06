@@ -29,6 +29,9 @@ import {EditProjectWidgetDialogComponent} from './components/edit-project-widget
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
+import {CarouselItemElement, DashboardRotationComponent} from './components/dashboard-rotation/dashboard-rotation.component';
+import {DashboardRotationItemDirective} from './components/dashboard-rotation/dashboard-rotation-item.directive';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 import {LayoutModule} from '../../layout/layout.module';
 import {DashboardRoutes} from './dashboard.route';
 
@@ -47,7 +50,10 @@ import {DashboardRoutes} from './dashboard.route';
     DeleteProjectWidgetDialogComponent,
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
-    DashboardTvComponent
+    DashboardTvComponent,
+    DashboardRotationComponent,
+    DashboardRotationItemDirective,
+    CarouselItemElement
   ],
   exports: [
     RouterModule

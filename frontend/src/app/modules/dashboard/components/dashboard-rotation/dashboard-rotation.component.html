@@ -1,0 +1,17 @@
+<div *ngIf="showControls" class="div-buttons">
+    <mat-checkbox (change)="playHandler()" [checked]="true">Autoplay</mat-checkbox>
+    <button mat-icon-button (click)="prev()" id="button-left"><img src="../../../../../assets/images/arrow-prev.png" class="icon-button" /></button>
+    <button mat-icon-button (click)="next()"><img src="../../../../../assets/images/arrow-next.png" class="icon-button" /></button>
+</div>
+
+<div #slidecircles class="div-nav-dots">
+    <img *ngFor="let item of items;let i=index;" src="../../../../../assets/images/slide.png" (click)="clickDots(i)" alt="slide circle" class="slide_circle" />
+</div>
+
+<section class="carousel-wrapper" [ngStyle]="carouselWrapperStyle">
+    <ul class="carousel-inner" #carousel>
+        <li *ngFor="let item of items;" class="carousel-item">
+            <ng-container [ngTemplateOutlet]="item.tpl"></ng-container>
+        </li>
+    </ul>
+</section>
