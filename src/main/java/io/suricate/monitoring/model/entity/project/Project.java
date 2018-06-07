@@ -40,6 +40,18 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Long id;
 
     /**
+     * The project type
+     */
+    @Column(nullable = false, length = 15, columnDefinition = "default 'classic'")
+    private String projectType;
+
+    /**
+     * The project dashboards
+     */
+    @Column
+    private String dashboards;
+
+    /**
      * The project name
      */
     @Column(nullable = false)

@@ -48,6 +48,13 @@ public class ProjectDto extends AbstractDto {
     @ApiModelProperty(value = "The project name", required = true)
     private String name;
     /**
+     * The project type
+     */
+    private String projectType;
+    /**The project dashboards
+     */
+    private String dashboards;
+    /**
      * Number of column in the dashboard
      */
     @ApiModelProperty(value = "The number of columns in the dashboard")

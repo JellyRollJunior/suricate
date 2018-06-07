@@ -28,6 +28,12 @@
             </mat-error>
           </mat-form-field>
 
+        <h1 fxFlexFill class="little">{{'Dashboard type' | uppercase}}</h1>
+        <mat-radio-group class="mat-radio-group" formControlName="projectType">
+            <mat-radio-button value="classic" [checked]="true">Classic</mat-radio-button>
+            <mat-radio-button value="slideshow" style="margin-left:10px">Slideshow</mat-radio-button>
+        </mat-radio-group>
+
           <h1 fxFlexFill class="little">{{ 'grid.configuration' | translate | uppercase}}</h1>
           <mat-form-field fxFlexFill>
             <input matInput
@@ -46,7 +52,7 @@
             <input matInput
                    type="number"
                    id="nb_column"
-                   placeholder=""
+                   placeholder="Number of column (used for display widgets)"
                    formControlName="maxColumn"
                    [required]="this.dashboardForm.get('maxColumn').errors && this.dashboardForm.get('maxColumn').errors.required">
 
@@ -118,12 +124,11 @@
           <mat-list role="list" *ngIf="projectAdded">
             <mat-list-item *ngFor="let user of projectAdded.users">
               <mat-icon style="display: block">account_box</mat-icon>
-              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
-              <button
-                  mat-icon-button
-                  matTooltip="Delete user"
-                  color="warn"
-                  (click)="deleteUser(user.id)">
+              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+              <button mat-icon-button
+                      matTooltip="Delete user"
+                      color="warn"
+                      (click)="deleteUser(user.id)">
                 <mat-icon>delete_forever</mat-icon>
               </button>
             </mat-list-item>

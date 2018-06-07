@@ -132,6 +132,9 @@ export class AddDashboardDialogComponent implements OnInit {
       'name':
           [this.projectAdded ? this.projectAdded.name : '',
             [Validators.required]],
+      'projectType':
+          [this.projectAdded ? this.projectAdded.projectType : 'classic',
+            [Validators.required]],
       'widgetHeight':
           [this.projectAdded ? this.projectAdded.widgetHeight : '360',
             [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],

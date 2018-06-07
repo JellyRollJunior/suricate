@@ -128,7 +128,7 @@ public class ProjectService {
     /**
      * Create a new project for a user
      *
-     * @param user    The user how create the project
+     * @param user The user who create the project
      * @param project The project to instantiate
      * @return The project instantiate
      */
