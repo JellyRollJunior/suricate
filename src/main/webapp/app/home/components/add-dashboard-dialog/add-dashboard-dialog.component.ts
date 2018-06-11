@@ -85,6 +85,11 @@ export class AddDashboardDialogComponent implements OnInit {
      */
     @Input('showProjectTypes') showProjectTypes = true;
 
+    /**
+     * Parent id in case of slide creation
+     */
+    @Input('parentId') parentId = null;
+
   /**
    * Constructor
    *
@@ -193,6 +198,7 @@ export class AddDashboardDialogComponent implements OnInit {
                 .createProject(this.projectAdded)
                 .subscribe(project => this.displayProject(project));
         } else { //Slide creation
+            this.projectAdded.parent = this.parentId;
             this.dashboardService
                 .createProject(this.projectAdded).subscribe();
         }

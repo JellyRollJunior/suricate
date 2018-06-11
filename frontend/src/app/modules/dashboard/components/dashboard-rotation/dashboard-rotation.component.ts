@@ -40,6 +40,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     @ViewChild('slidecircles') private slideCircles: ElementRef;
     @Input() timing = '350ms ease-in';
     @Input() showControls = true;
+    @Input() projectId;
     addSlideDialogRef: MatDialogRef<AddDashboardDialogComponent>;
     private player: AnimationPlayer;
     private itemWidth: number;
@@ -101,6 +102,7 @@ export class DashboardRotationComponent implements AfterViewInit {
             minHeight: 500,
         });
         this.addSlideDialogRef.componentInstance.showProjectTypes = false;
+        this.addSlideDialogRef.componentInstance.parentId = this.projectId;
     }
 
     private buildAnimation( offset ) {

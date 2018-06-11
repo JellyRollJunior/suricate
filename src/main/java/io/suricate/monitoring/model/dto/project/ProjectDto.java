@@ -53,6 +53,10 @@ public class ProjectDto extends AbstractDto {
      */
     private ProjectType projectType;
     /**
+     * The project parent
+     */
+    private Integer parent;
+    /**
      * Number of column in the dashboard
      */
     @ApiModelProperty(value = "The number of columns in the dashboard")

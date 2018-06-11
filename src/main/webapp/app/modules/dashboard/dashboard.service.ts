@@ -18,6 +18,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {forEach} from '@angular/router/src/utils/collection';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators/map';
 
 import {Project} from '../../shared/model/dto/Project';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';

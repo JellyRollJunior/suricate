@@ -54,6 +54,12 @@ public class Project extends AbstractAuditingEntity<Long> {
     private String name;
 
     /**
+     * The project parent
+     */
+    @Column
+    private Integer parent;
+
+    /**
      * The project token
      */
     @Column(nullable = false)

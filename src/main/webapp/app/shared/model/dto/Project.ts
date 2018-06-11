@@ -26,6 +26,7 @@ export class Project {
   id: number;
   name: string;
   projectType: ProjectType;
+  parent: number;
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
