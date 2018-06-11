@@ -17,7 +17,7 @@
 import {User} from './user/User';
 import {ProjectWidget} from './ProjectWidget';
 import {WebsocketClient} from './WebsocketClient';
-import {QueryList} from '@angular/core';
+import {ProjectType} from './enums/ProjectType';
 
 /**
  * The project entity
@@ -25,8 +25,7 @@ import {QueryList} from '@angular/core';
 export class Project {
   id: number;
   name: string;
-  projectType: string;
-  dashboards: Project[];
+  projectType: ProjectType;
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;

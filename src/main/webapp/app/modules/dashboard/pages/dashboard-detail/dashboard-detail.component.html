@@ -1,7 +1,7 @@
 <app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
 <!-- Dashboard screen -->
-<div *ngIf="(project$ | async)?.projectType.match('classic'); else slideshow"> -->
+<div *ngIf="(project$ | async)?.projectType.toString().match('DEFAULT'); else slideshow">
 <app-dashboard-screen *ngIf="(project$ | async)"
                       [project]="(project$ | async)"
                       [readOnly]="false">

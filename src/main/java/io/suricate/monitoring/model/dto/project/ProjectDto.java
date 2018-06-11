@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.suricate.monitoring.model.enums.ProjectType;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -50,10 +51,7 @@ public class ProjectDto extends AbstractDto {
     /**
      * The project type
      */
-    private String projectType;
-    /**The project dashboards
-     */
-    private String dashboards;
+    private ProjectType projectType;
     /**
      * Number of column in the dashboard
      */

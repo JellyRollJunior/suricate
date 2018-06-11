@@ -57,6 +57,9 @@ mat-checkbox{
 button{
     width: 37px;
     height: 37px;
+    color: #cfd2da;
+    font-variant: all-small-caps;
+    font-size: 1rem;
 }
 
 #button-left{
@@ -68,4 +71,9 @@ button{
     width : 100%;
     margin-bottom: 15px;
     margin-top: 1em;
+}
+
+.toRight{
+    margin-left: 25px;
+    margin-right: 10px;
 }

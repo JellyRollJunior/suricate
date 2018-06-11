@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.enums;
-
-/**
- * enums used to define a project type
- */
-public enum ProjectType {
-    DEFAULT,
-    SLIDESHOW,
-    SLIDE
+export enum ProjectType {
+  DEFAULT = 'DEFAULT',
+  SLIDESHOW = 'SLIDESHOW',
+  SLIDE = 'SLIDE'
 }

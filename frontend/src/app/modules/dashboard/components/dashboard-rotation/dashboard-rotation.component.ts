@@ -1,10 +1,25 @@
-import { AfterViewInit, Component, ContentChildren, Directive, ElementRef, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    Inject,
+    Input,
+    OnInit,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import { animate, AnimationBuilder, AnimationFactory, AnimationPlayer, style } from '@angular/animations';
 import {DashboardRotationItemDirective} from './dashboard-rotation-item.directive';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
+import {AddDashboardDialogComponent} from '../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 @Directive({
     selector: '.carousel-item'
@@ -25,6 +40,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     @ViewChild('slidecircles') private slideCircles: ElementRef;
     @Input() timing = '350ms ease-in';
     @Input() showControls = true;
+    addSlideDialogRef: MatDialogRef<AddDashboardDialogComponent>;
     private player: AnimationPlayer;
     private itemWidth: number;
     private currentSlide = 0;
@@ -58,7 +74,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.animate(offset);
     }
 
-    animate(offset){
+    animate(offset) {
         const myAnimation: AnimationFactory = this.buildAnimation(offset);
         this.player = myAnimation.create(this.carousel.nativeElement);
         this.player.play();
@@ -79,13 +95,21 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.next();
     }
 
+    openAddSlideDialog() {
+        this.addSlideDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
+            minWidth: 900,
+            minHeight: 500,
+        });
+        this.addSlideDialogRef.componentInstance.showProjectTypes = false;
+    }
+
     private buildAnimation( offset ) {
         return this.builder.build([
             animate(this.timing, style({ transform: `translateX(-${offset}px)` }))
         ]);
     }
 
-    prev(){
+    prev() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
         if ( this.currentSlide === 0 ) {
@@ -99,13 +123,13 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.animate(offset);
     }
 
-    constructor( private builder: AnimationBuilder ) {}
+    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, ) {}
 
     ngAfterViewInit() {
         setTimeout(() => {
-            if(this.showControls) {
+            if (this.showControls) {
                 this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
-            }else {
+            } else {
                 this.itemWidth = window.innerWidth - 20;
             }
             this.carouselWrapperStyle = {

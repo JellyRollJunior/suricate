@@ -19,6 +19,7 @@ package io.suricate.monitoring.model.entity.project;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.ProjectType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,14 +43,9 @@ public class Project extends AbstractAuditingEntity<Long> {
     /**
      * The project type
      */
-    @Column(nullable = false, length = 15, columnDefinition = "default 'classic'")
-    private String projectType;
-
-    /**
-     * The project dashboards
-     */
-    @Column
-    private String dashboards;
+    @Column(nullable = false, length = 15, columnDefinition = "default 'DEFAULT'")
+    @Enumerated(EnumType.STRING)
+    private ProjectType projectType;
 
     /**
      * The project name

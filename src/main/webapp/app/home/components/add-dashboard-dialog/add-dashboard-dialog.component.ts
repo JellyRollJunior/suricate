@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
@@ -26,6 +26,7 @@ import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {User} from '../../../shared/model/dto/user/User';
 import {UserService} from '../../../modules/security/user/user.service';
 import {Project} from '../../../shared/model/dto/Project';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -78,6 +79,11 @@ export class AddDashboardDialogComponent implements OnInit {
    * @type {string}
    */
   dashboardBackgroundColor = '#42424200';
+
+    /**
+     * Let the user choose the project type or not
+     */
+    @Input('showProjectTypes') showProjectTypes = true;
 
   /**
    * Constructor
@@ -133,7 +139,7 @@ export class AddDashboardDialogComponent implements OnInit {
           [this.projectAdded ? this.projectAdded.name : '',
             [Validators.required]],
       'projectType':
-          [this.projectAdded ? this.projectAdded.projectType : 'classic',
+          [this.projectAdded ? ProjectType[this.projectAdded.projectType] : this.showProjectTypes ? ProjectType.DEFAULT : ProjectType.SLIDE,
             [Validators.required]],
       'widgetHeight':
           [this.projectAdded ? this.projectAdded.widgetHeight : '360',
@@ -182,10 +188,14 @@ export class AddDashboardDialogComponent implements OnInit {
       this.projectAdded.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
-        this.dashboardService
-            .createProject(this.projectAdded)
-            .subscribe(project => this.displayProject(project));
-
+        if (this.showProjectTypes) { //Dashboard creation
+            this.dashboardService
+                .createProject(this.projectAdded)
+                .subscribe(project => this.displayProject(project));
+        } else { //Slide creation
+            this.dashboardService
+                .createProject(this.projectAdded).subscribe();
+        }
       } else {
         this.dashboardService
             .editProject(this.projectAdded)
