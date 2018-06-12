@@ -20,6 +20,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import {AddDashboardDialogComponent} from '../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {Project} from '../../../../shared/model/dto/Project';
 
 @Directive({
     selector: '.carousel-item'
@@ -36,11 +37,12 @@ export class DashboardRotationComponent implements AfterViewInit {
     @ContentChildren(DashboardRotationItemDirective) items: QueryList<DashboardRotationItemDirective>;
     @ViewChildren(CarouselItemElement, { read: ElementRef }) private itemsElements: QueryList<ElementRef>;
     @ViewChild('carousel') private carousel: ElementRef;
-    @ViewChild('playstop') private playStop: ElementRef;
     @ViewChild('slidecircles') private slideCircles: ElementRef;
+    @ViewChild('slideName') private slideName: ElementRef;
     @Input() timing = '350ms ease-in';
     @Input() showControls = true;
     @Input() projectId;
+    @Input('childs') childs: Project[];
     addSlideDialogRef: MatDialogRef<AddDashboardDialogComponent>;
     private player: AnimationPlayer;
     private itemWidth: number;
@@ -80,6 +82,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.player = myAnimation.create(this.carousel.nativeElement);
         this.player.play();
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
+        this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
     }
 
     clickDots(item) {
@@ -129,6 +132,9 @@ export class DashboardRotationComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         setTimeout(() => {
+            this.carousel.nativeElement.style.width = this.items.length + '00%';
+            this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
+            this.slideName.nativeElement.innerHTML = this.childs[0].name;
             if (this.showControls) {
                 this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
             } else {
@@ -140,8 +146,6 @@ export class DashboardRotationComponent implements AfterViewInit {
         });
 
         //INITIAL CONDITIONS
-        this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
-        this.carousel.nativeElement.style.width = this.items.length + '00%';
         this.sub = Observable.interval(10000)
             .subscribe((val) => { this.handleNext(); });
 

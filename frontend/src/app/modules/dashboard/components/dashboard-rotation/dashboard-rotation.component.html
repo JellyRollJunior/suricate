@@ -2,8 +2,9 @@
     <mat-checkbox (change)="playHandler()" [checked]="true">Autoplay</mat-checkbox>
     <button mat-icon-button (click)="prev()" id="button-left"><img src="../../../../../assets/images/arrow-prev.png" class="icon-button" /></button>
     <button mat-icon-button (click)="next()"><img src="../../../../../assets/images/arrow-next.png" class="icon-button" /></button>
-    <button mat-icon-button (click)="openAddSlideDialog()"><img src="../../../../../assets/images/add-slide.png" class="icon-button toRight"/>Add Slide</button>
+    <button mat-icon-button (click)="openAddSlideDialog()" class="toRight"><img src="../../../../../assets/images/add-slide.png" class="icon-button toLeft"/>Add Slide</button>
 </div>
+<h3 #slideName class="slideName"></h3>
 
 <div #slidecircles class="div-nav-dots">
     <img *ngFor="let item of items;let i=index;" src="../../../../../assets/images/slide.png" (click)="clickDots(i)" alt="slide circle" class="slide_circle" />

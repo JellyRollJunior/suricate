@@ -23,6 +23,15 @@ section {
     width : 100%;
 }
 
+.slideName{
+    font-weight: 300;
+    font-variant: all-small-caps;
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+    width : 100%;
+    text-align: center;
+}
+
 
 /* CHECKBOX */
 
@@ -75,5 +84,8 @@ button{
 
 .toRight{
     margin-left: 25px;
+}
+
+.toLeft{
     margin-right: 10px;
 }

@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,17 @@ public class ProjectService {
      */
     public List<Project> getAllByUser(User user) {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
+    }
+
+
+    /**
+     * Retrieve all childs for a project
+     *
+     * @param id The id
+     * @return Childs of the project
+     */
+    public List<Project> getAllChildsByParentId(Long id){
+        return projectRepository.findChildsByParentId(id);
     }
 
     /**

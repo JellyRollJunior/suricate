@@ -55,7 +55,7 @@ public class ProjectDto extends AbstractDto {
     /**
      * The project parent
      */
-    private Integer parent;
+    private Long parent;
     /**
      * Number of column in the dashboard
      */

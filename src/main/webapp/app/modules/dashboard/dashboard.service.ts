@@ -225,6 +225,16 @@ export class DashboardService {
     return this.httpClient.get<Project>(url);
   }
 
+    /**
+     * Get child dashboards by parent id
+     *
+     * @param {number} id The parent id
+     * @returns {Observable<Project[]} childs dashboards as observable
+     */
+    getChildsByParentId(id: number): Observable<Project[]> {
+        return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}/childs/${id}`);
+    }
+
   /**
    * Get a dashboard by token
    *

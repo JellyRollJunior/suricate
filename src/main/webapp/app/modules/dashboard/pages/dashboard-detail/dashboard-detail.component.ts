@@ -55,6 +55,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   project$: Observable<Project>;
 
   /**
+   * Child Projects as observables
+   */
+  childs: Observable<Project[]>;
+
+  /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -82,6 +87,22 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.dashboardService.currentDisplayedDashboard$
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
+
+
+    this.activatedRoute.params.subscribe(params => {
+      this.dashboardService
+            .getChildsByParentId(+params['id'])
+            .subscribe(projects => {
+                this.dashboardService.dashboardsSubject.next(projects);
+            });
+    });
+
+    this.dashboardService
+        .dashboardsSubject
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe(projects => this.childs = of(projects));
+
+    console.log(this.project$);
   }
 
   /**

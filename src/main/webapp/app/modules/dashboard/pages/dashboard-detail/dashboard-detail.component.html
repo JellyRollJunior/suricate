@@ -8,11 +8,11 @@
 </app-dashboard-screen>
 </div>
 <ng-template #slideshow>
-    <app-dashboard-rotation [projectId]="(project$ | async)?.id">
-        <ng-container *ngFor="let item of [{ title: 'Slide 1' },{ title: 'Slide 2' },{ title: 'Slide 3' },{title:'Slide 4'},{title:'Slide 5'}];">
+    <app-dashboard-rotation [projectId]="(project$ | async)?.id" [childs]="(childs | async)">
+        <ng-container *ngFor="let child of (this.childs | async);">
             <ng-container *carouselItem>
-                <app-dashboard-screen *ngIf="(project$ | async)"
-                                      [project]="(project$ | async)"
+                <app-dashboard-screen *ngIf="child"
+                                      [project]="child"
                                       [readOnly]="false">
                 </app-dashboard-screen>
             </ng-container>
