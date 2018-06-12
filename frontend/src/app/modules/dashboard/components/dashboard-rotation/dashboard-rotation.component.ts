@@ -143,12 +143,12 @@ export class DashboardRotationComponent implements AfterViewInit {
             this.carouselWrapperStyle = {
                 width: `${this.itemWidth}px`
             };
-        });
+        }, 100);
 
         //INITIAL CONDITIONS
         this.sub = Observable.interval(10000)
             .subscribe((val) => { this.handleNext(); });
-
     }
+
 
 }

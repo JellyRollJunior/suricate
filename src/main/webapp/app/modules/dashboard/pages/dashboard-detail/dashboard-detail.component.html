@@ -9,7 +9,7 @@
 </div>
 <ng-template #slideshow>
     <app-dashboard-rotation [projectId]="(project$ | async)?.id" [childs]="(childs | async)">
-        <ng-container *ngFor="let child of (this.childs | async);">
+        <ng-container *ngFor="let child of (childs | async);">
             <ng-container *carouselItem>
                 <app-dashboard-screen *ngIf="child"
                                       [project]="child"

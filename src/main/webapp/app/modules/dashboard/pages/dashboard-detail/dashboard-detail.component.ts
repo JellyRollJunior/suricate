@@ -23,6 +23,7 @@ import {takeWhile} from 'rxjs/operators';
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
+import {DashboardRotationComponent} from '../components/dashboard-rotation/dashboard-rotation.component';
 
 /**
  * Component that display a specific dashboard
@@ -101,8 +102,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .dashboardsSubject
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(projects => this.childs = of(projects));
-
-    console.log(this.project$);
   }
 
   /**
