@@ -30,6 +30,7 @@ import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
 import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';
 import {projectsApiEndpoint} from '../../app.constant';
+import {ProjectType} from '../../shared/model/dto/enums/ProjectType';
 
 /**
  * The dashboard service, manage http calls
