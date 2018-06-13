@@ -38,15 +38,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	List<Project> findByUsers_IdOrderByName(Long id);
 
 	/**
-	 * Find childs projects by parent id
-	 *
-	 * @param id The parent id
-	 * @return List of childs projects
-	 */
-	@Query("SELECT p FROM Project p WHERE parent=:id")
-	List<Project> findChildsByParentId(@Param("id") Long id);
-
-	/**
 	 * Find a project by token
 	 *
 	 * @param token The token to find

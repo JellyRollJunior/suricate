@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
@@ -79,6 +79,8 @@ export class AddDashboardDialogComponent implements OnInit {
    * @type {string}
    */
   dashboardBackgroundColor = '#42424200';
+
+  onAdd = new EventEmitter();
 
     /**
      * Let the user choose the project type or not
@@ -200,7 +202,10 @@ export class AddDashboardDialogComponent implements OnInit {
         } else { //Slide creation
             this.projectAdded.parent = this.parentId;
             this.dashboardService
-                .createProject(this.projectAdded).subscribe();
+                .createProject(this.projectAdded).subscribe(() => {
+                  this.displayProject(this.dashboardService.currendDashbordSubject.getValue());
+                  this.onAdd.emit();
+            });
         }
       } else {
         this.dashboardService

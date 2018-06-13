@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dashboardService.currentDashboardList$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(dashboards => this.dashboards = this.dashboardService.sortByProjectName(dashboards));
+        .subscribe( dashboards => this.dashboards = this.dashboardService.sortByProjectName(this.dashboardService.getAllProjectsExceptSlides(dashboards)));
   }
 
   /**

@@ -55,10 +55,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   project$: Observable<Project>;
 
+    /**
+     * The current project id
+     */
+  projectId;
+
   /**
    * Child Projects as observables
    */
-  childs: Observable<Project[]>;
+  childs: Project[];
+
+  @ViewChild('dashboardrotation') private dashboardRotation: ElementRef;
 
   /**
    * constructor
@@ -89,20 +96,20 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
 
+    this.activatedRoute.params.subscribe(params => this.projectId = params['id']);
 
-    this.activatedRoute.params.subscribe(params => {
-      this.dashboardService
-            .getChildsByParentId(+params['id'])
-            .subscribe(projects => {
-                this.dashboardService.dashboardsSubject.next(projects);
-            });
-    });
-
-    this.dashboardService
-        .dashboardsSubject
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(projects => this.childs = of(projects));
+    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
   }
+
+
+    get refreshFunc() {
+        return this.refresh.bind(this);
+    }
+
+  refresh(){
+    this.childs = this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+  }
+
 
   /**
    * The add widget dialog ref

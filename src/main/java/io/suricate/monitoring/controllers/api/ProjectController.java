@@ -141,25 +141,6 @@ public class ProjectController {
     }
 
     /**
-     * Get childs for a project
-     *
-     * @param parentId The parent id
-     * @return The whole list of childs
-     */
-    @RequestMapping(value = "/childs/{parentId}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ProjectDto>> getAllChildsForProject(@PathVariable("parentId") Long parentId){
-
-        List<Project> projects = projectService.getAllChildsByParentId(parentId);
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(projectMapper.toProjectDtosDefault(projects));
-    }
-
-    /**
      * Get projects for a user
      *
      * @param principal The connected user

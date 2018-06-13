@@ -437,4 +437,30 @@ export class DashboardService {
       return 0;
     });
   }
+
+  getAllProjectsExceptSlides(projects: Project[]): Project[] {
+      let filteredProjects: Project[];
+      filteredProjects = [];
+      projects.forEach((project) => {
+          if (project.projectType !== ProjectType.SLIDE) {
+              filteredProjects.push(project);
+          }
+      });
+
+      return filteredProjects;
+  }
+
+  getSlidesByParentId(id: number) {
+      let filteredProjects: Project[];
+      filteredProjects = [];
+      const allProjects = this.dashboardsSubject.getValue();
+
+      allProjects.forEach((project) => {
+          if (project.projectType === ProjectType.SLIDE && project.parent == id) {
+              filteredProjects.push(project);
+          }
+      });
+
+      return filteredProjects;
+  }
 }

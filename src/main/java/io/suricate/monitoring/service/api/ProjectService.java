@@ -94,17 +94,6 @@ public class ProjectService {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
     }
 
-
-    /**
-     * Retrieve all childs for a project
-     *
-     * @param id The id
-     * @return Childs of the project
-     */
-    public List<Project> getAllChildsByParentId(Long id){
-        return projectRepository.findChildsByParentId(id);
-    }
-
     /**
      * Test if the project exists by id
      *

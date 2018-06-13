@@ -3,10 +3,10 @@ import {
     Component,
     ContentChildren,
     Directive,
-    ElementRef,
+    ElementRef, EventEmitter,
     Inject,
     Input,
-    OnInit,
+    OnInit, Output,
     QueryList,
     TemplateRef,
     ViewChild,
@@ -21,6 +21,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {AddDashboardDialogComponent} from '../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Project} from '../../../../shared/model/dto/Project';
+import {DashboardService} from '../../dashboard.service';
 
 @Directive({
     selector: '.carousel-item'
@@ -43,6 +44,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     @Input() showControls = true;
     @Input() projectId;
     @Input('childs') childs: Project[];
+    @Input() addSlide: Function;
     addSlideDialogRef: MatDialogRef<AddDashboardDialogComponent>;
     private player: AnimationPlayer;
     private itemWidth: number;
@@ -51,6 +53,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     private cpt = 0;
     private autoPlay = true;
     private sub;
+
 
     playHandler() {
         this.autoPlay = !this.autoPlay;
@@ -83,6 +86,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.player.play();
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
         this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
+        this.dashboardService.currendDashbordSubject.next(this.childs[this.currentSlide]);
     }
 
     clickDots(item) {
@@ -106,6 +110,9 @@ export class DashboardRotationComponent implements AfterViewInit {
         });
         this.addSlideDialogRef.componentInstance.showProjectTypes = false;
         this.addSlideDialogRef.componentInstance.parentId = this.projectId;
+        const subscriber = this.addSlideDialogRef.componentInstance.onAdd.subscribe(() => {
+            this.addSlide();
+        });
     }
 
     private buildAnimation( offset ) {
@@ -128,7 +135,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.animate(offset);
     }
 
-    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, ) {}
+    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService) {}
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -143,7 +150,7 @@ export class DashboardRotationComponent implements AfterViewInit {
             this.carouselWrapperStyle = {
                 width: `${this.itemWidth}px`
             };
-        });
+        }, 100);
 
         //INITIAL CONDITIONS
         this.sub = Observable.interval(10000)
