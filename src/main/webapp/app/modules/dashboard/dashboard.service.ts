@@ -66,6 +66,8 @@ export class DashboardService {
    */
   private currendDashbordSubject = new BehaviorSubject<Project>(null);
 
+  currentSlideSubject = new BehaviorSubject<Project>(null);
+
   /**
    * The constructor
    *

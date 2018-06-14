@@ -29,8 +29,11 @@ import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {SettingsService} from '../../../../shared/services/settings.service';
 import {UserService} from '../../../security/user/user.service';
+import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
+import {ThemeService} from '../../../shared/services/theme.service';
 
 import * as Stomp from '@stomp/stompjs';
+
 
 /**
  * Dashboard TV Management
@@ -60,6 +63,16 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @type {Observable<Project>}
    */
   project$: Observable<Project>;
+
+    /**
+     * The current project id
+     */
+    projectId;
+
+    /**
+     * Child Projects as observables
+     */
+    childs: Project[];
 
   /**
    * The screen code to display
@@ -97,14 +110,21 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.sidenavService.closeSidenav();
     this.screenCode = this.websocketService.getscreenCode();
 
-    this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+      this.dashboardService.currentDisplayedDashboard$
+          .pipe(takeWhile(() => this.isAlive))
+          .subscribe(project => this.project$ = of(project));
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
         this.dashboardService.getOneByToken(params['token']).subscribe(project => {
-          this.dashboardService.currentDisplayedDashboardValue = project;
+            this.dashboardService.currentDisplayedDashboardValue = project;
+            this.project$ = of(project);
+            this.projectId = project.id;
+            if (project.projectType === ProjectType.SLIDESHOW) {
+                this.dashboardService.getAllForCurrentUser().subscribe((projects) => {
+                    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+                });
+            }
         });
 
       } else {
@@ -114,7 +134,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
+
+
+   /**
    * When on code view screen we wait for new connection
    */
   listenForConnection() {

@@ -27,6 +27,7 @@ import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVaria
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
+import {ProjectType} from '../../../../model/dto/enums/ProjectType';
 
 /**
  * Dialog used to add a widget
@@ -131,7 +132,11 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
+        if (this.dashboardService.currendDashbordSubject.getValue().projectType === ProjectType.SLIDESHOW) {
+            projectWidget.project = this.dashboardService.currentSlideSubject.getValue();
+        } else {
+            projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
+        }
       projectWidget.widget = this.selectedWidget;
 
       this.dashboardService

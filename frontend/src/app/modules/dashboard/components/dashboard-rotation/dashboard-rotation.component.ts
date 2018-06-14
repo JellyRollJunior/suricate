@@ -40,6 +40,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     @ViewChild('carousel') private carousel: ElementRef;
     @ViewChild('slidecircles') private slideCircles: ElementRef;
     @ViewChild('slideName') private slideName: ElementRef;
+    @ViewChild('divDots') private divDots: ElementRef;
     @Input() timing = '350ms ease-in';
     @Input() showControls = true;
     @Input() projectId;
@@ -53,6 +54,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     private cpt = 0;
     private autoPlay = true;
     private sub;
+    private nbItems;
 
 
     playHandler() {
@@ -69,11 +71,11 @@ export class DashboardRotationComponent implements AfterViewInit {
     next() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
-        if ( this.currentSlide + 1 === this.items.length ) {
+        if ( this.currentSlide + 1 === this.nbItems ) {
             offset = 0;
             this.currentSlide = 0;
         } else {
-            this.currentSlide = (this.currentSlide + 1) % this.items.length;
+            this.currentSlide = (this.currentSlide + 1) % this.nbItems;
             offset = this.currentSlide * (this.itemWidth);
         }
 
@@ -86,14 +88,33 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.player.play();
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
         this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
-        this.dashboardService.currendDashbordSubject.next(this.childs[this.currentSlide]);
+        this.dashboardService.currentSlideSubject.next(this.childs[this.currentSlide]);
+        if(!this.showControls) {
+            setTimeout(() => {
+                this.animateDivDots(-55);
+            }, 5000);
+        }
+
+    }
+
+    animateDivDots(offset) {
+        const divDotsAnimation: AnimationFactory = this.buildDivDotsAnimation(offset);
+        this.player = divDotsAnimation.create(this.divDots.nativeElement);
+        this.player.play();
     }
 
     clickDots(item) {
-        this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
-        this.currentSlide = item;
-        const offset = item * (this.itemWidth);
-        this.animate(offset);
+        if (this.showControls) {
+            this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
+            this.currentSlide = item;
+            const offset = item * (this.itemWidth);
+            this.animate(offset);
+        }
+    }
+
+    updateCarouselSize(){
+        this.nbItems++;
+        this.carousel.nativeElement.style.width = this.nbItems + '00%';
     }
 
     handleNext() {
@@ -101,6 +122,9 @@ export class DashboardRotationComponent implements AfterViewInit {
 
         this.cpt = 0;
         this.next();
+        if(!this.showControls){
+            this.animateDivDots(0);
+        }
     }
 
     openAddSlideDialog() {
@@ -121,14 +145,20 @@ export class DashboardRotationComponent implements AfterViewInit {
         ]);
     }
 
+    private buildDivDotsAnimation(offset) {
+        return this.builder.build([
+            animate(this.timing, style({transform: `translateY(${offset}px)`}))
+        ]);
+    }
+
     prev() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
         if ( this.currentSlide === 0 ) {
-            offset = (this.items.length - 1) * (this.itemWidth);
-            this.currentSlide = this.items.length - 1;
+            offset = (this.nbItems - 1) * (this.itemWidth);
+            this.currentSlide = this.nbItems - 1;
         } else {
-            this.currentSlide = ((this.currentSlide - 1) + this.items.length) % this.items.length;
+            this.currentSlide = ((this.currentSlide - 1) + this.nbItems) % this.nbItems;
             offset = this.currentSlide * (this.itemWidth);
         }
 
@@ -139,13 +169,22 @@ export class DashboardRotationComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.carousel.nativeElement.style.width = this.items.length + '00%';
+            this.nbItems = this.items.length;
+            this.carousel.nativeElement.style.width = this.nbItems + '00%';
             this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
             this.slideName.nativeElement.innerHTML = this.childs[0].name;
+            this.dashboardService.currentSlideSubject.next(this.childs[0]);
+            if (!this.showControls) {
+                this.divDots.nativeElement.classList.add( 'floating');
+                this.divDots.nativeElement.style.marginLeft = ((window.innerWidth - 40) / 2) - (this.divDots.nativeElement.getBoundingClientRect().width / 2) + 'px';
+                setTimeout(() => {
+                    this.animateDivDots(-55);
+                }, 5000);
+            }
             if (this.showControls) {
                 this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
             } else {
-                this.itemWidth = window.innerWidth - 20;
+                this.itemWidth = window.innerWidth - 40;
             }
             this.carouselWrapperStyle = {
                 width: `${this.itemWidth}px`

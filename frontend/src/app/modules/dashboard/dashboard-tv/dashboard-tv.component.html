@@ -1,8 +1,25 @@
-<app-dashboard-screen *ngIf="(project$ | async); else displayScreenCode"
-                      [project]="(project$ | async)"
-                      [readOnly]="true"
-                      [screenCode]="screenCode">
-</app-dashboard-screen>
+<!-- Dashboard screen -->
+<div *ngIf="(project$ | async)?.projectType.toString().match('DEFAULT'); else slideshow">
+  <app-dashboard-screen *ngIf="(project$ | async); else displayScreenCode"
+                        [project]="(project$ | async)"
+                        [readOnly]="true"
+                        [screenCode]="screenCode">
+  </app-dashboard-screen>
+</div>
+
+<ng-template #slideshow>
+  <app-dashboard-rotation [showControls]="false" [projectId]="(project$ | async)?.id" [childs]="childs" [addSlide]="refreshFunc">
+    <ng-container *ngFor="let child of childs;">
+      <ng-container *carouselItem>
+        <app-dashboard-screen *ngIf="child"
+                              [project]="child"
+                              [readOnly]="false">
+        </app-dashboard-screen>
+      </ng-container>
+    </ng-container>
+  </app-dashboard-rotation>
+</ng-template>
+
 
 <ng-template #displayScreenCode>
   <div class="container"

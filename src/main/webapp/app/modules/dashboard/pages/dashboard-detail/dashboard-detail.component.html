@@ -1,26 +1,30 @@
 <app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
-<!-- Dashboard screen -->
-<div *ngIf="(project$ | async)?.projectType.toString().match('DEFAULT'); else slideshow">
-<app-dashboard-screen *ngIf="(project$ | async)"
-                      [project]="(project$ | async)"
-                      [readOnly]="false">
-</app-dashboard-screen>
-</div>
-<ng-template #slideshow>
-    <app-dashboard-rotation [projectId]="(project$ | async)?.id" [childs]="childs" [addSlide]="refreshFunc">
-        <ng-container *ngFor="let child of childs;">
-            <ng-container *carouselItem>
-                <app-dashboard-screen *ngIf="child"
-                                      [project]="child"
-                                      [readOnly]="false">
-                </app-dashboard-screen>
-            </ng-container>
-        </ng-container>
-    </app-dashboard-rotation>
-</ng-template>
+<!-- Dashboard screen DEFAULT -->
+<div *ngIf="(project$ | async)?.projectWidgets; else dashboardNoWidget">
+    <div *ngIf="(project$ | async).projectType === projectType.DEFAULT; else slideshow">
+        <app-dashboard-screen *ngIf="(project$ | async)"
+                              [project]="(project$ | async)"
+                              [readOnly]="false">
+        </app-dashboard-screen>
+    </div>
 
-<!-- Display the add card, if no widget inside the project -->
+    <!-- Dashboard screen SLIDESHOW -->
+    <ng-template #slideshow>
+        <app-dashboard-rotation [projectId]="(project$ | async).id" [childs]="childs" [addSlide]="refreshFunc">
+            <ng-container *ngFor="let child of childs;">
+                <ng-container *carouselItem>
+                    <app-dashboard-screen *ngIf="child"
+                                          [project]="child"
+                                          [readOnly]="false">
+                    </app-dashboard-screen>
+                </ng-container>
+            </ng-container>
+        </app-dashboard-rotation>
+    </ng-template>
+</div>
+
+<!-- NO WIDGET Display the add card, if no widget inside the project -->
 <ng-template #dashboardNoWidget>
   <div fxLayout="col wrap" fxLayoutAlign="start start">
     <!-- Add Dashboard Card -->

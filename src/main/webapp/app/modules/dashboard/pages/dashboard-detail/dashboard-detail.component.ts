@@ -24,6 +24,7 @@ import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 import {DashboardRotationComponent} from '../components/dashboard-rotation/dashboard-rotation.component';
+import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
 
 /**
  * Component that display a specific dashboard
@@ -65,7 +66,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   childs: Project[];
 
-  @ViewChild('dashboardrotation') private dashboardRotation: ElementRef;
+    /**
+     * Project type enum reference
+     * @type {ProjectType}
+     */
+  projectType = ProjectType;
+
+    /**
+     * The dashboard rotation
+     * @type {DashboardRotationComponent}
+     */
+    @ViewChild(DashboardRotationComponent) dashboardRotation: DashboardRotationComponent;
 
   /**
    * constructor
@@ -108,6 +119,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
   refresh(){
     this.childs = this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+    this.dashboardRotation.updateCarouselSize();
   }
 
 
