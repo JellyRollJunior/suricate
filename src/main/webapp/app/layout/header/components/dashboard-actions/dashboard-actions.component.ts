@@ -24,6 +24,7 @@ import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management
 import {ScreenService} from '../../../../modules/dashboard/screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
+import {ProjectType} from '../../../../model/dto/enums/ProjectType';
 
 /**
  * Hold the header dashboard actions
@@ -94,10 +95,17 @@ export class DashboardActionsComponent implements OnInit {
    * Open the edit widget dialog
    */
   openEditDashboardDialog() {
+    let projId = this.project.id;
+    if (this.project.projectType === ProjectType.SLIDESHOW) {
+      projId = this.dashboardService.currentDisplayedDashboardValue.id;
+    }
+
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectId: projId}
     });
+
+    this.editDashboardDialogRef.componentInstance.showProjectTypes = false;
   }
 
   /**

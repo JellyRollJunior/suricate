@@ -155,11 +155,15 @@ public class ProjectService {
     @Transactional
     public void updateProject(Project project,
                               final String newName,
+                              final int newDuration,
                               final int widgetHeight,
                               final int maxColumn,
                               final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
+        }
+        if(newDuration > 0){
+            project.setDuration(newDuration);
         }
         if (widgetHeight > 0) {
             project.setWidgetHeight(widgetHeight);
@@ -167,7 +171,6 @@ public class ProjectService {
         if (maxColumn > 0) {
             project.setMaxColumn(maxColumn);
         }
-
         if (StringUtils.isNotBlank(customCss)) {
             project.setCssStyle(customCss);
         }

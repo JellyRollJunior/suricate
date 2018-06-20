@@ -148,6 +148,9 @@ export class AddDashboardDialogComponent implements OnInit {
       'projectType':
           [this.projectAdded ? ProjectType[this.projectAdded.projectType] : this.showProjectTypes ? ProjectType.DEFAULT : ProjectType.SLIDE,
             [Validators.required]],
+      'duration':
+          [this.projectAdded ? this.projectAdded.duration : '10',
+            [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
       'widgetHeight':
           [this.projectAdded ? this.projectAdded.widgetHeight : '360',
             [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
@@ -210,7 +213,13 @@ export class AddDashboardDialogComponent implements OnInit {
       } else {
         this.dashboardService
             .editProject(this.projectAdded)
-            .subscribe(project => this.displayProject(project));
+            .subscribe(project => {
+                this.displayProject(this.dashboardService.currendDashbordSubject.getValue());
+                if (project.projectType === ProjectType.SLIDE) {
+                    console.log("SLIDE UPDATED");
+                    this.dashboardService.currentSlideSubject.next(project);
+                }
+            });
       }
     }
   }

@@ -60,6 +60,12 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Long parent;
 
     /**
+     * The duration in case of slide
+     */
+    @Column(nullable = false)
+    private int duration;
+
+    /**
      * The project token
      */
     @Column(nullable = false)

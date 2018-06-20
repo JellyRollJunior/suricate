@@ -45,6 +45,7 @@ import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/ed
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
 
 import * as Stomp from '@stomp/stompjs';
 
@@ -642,7 +643,11 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       const projectUpdated: Project = updateEvent.content;
       if (projectUpdated) {
         this._isGridItemInit = false;
-        this.dashboardService.currentDisplayedDashboardValue = projectUpdated;
+        if (projectUpdated.projectType === ProjectType.SLIDE) {
+            this.dashboardService.currentSlideSubject.next(projectUpdated);
+        } else {
+            this.dashboardService.currentDisplayedDashboardValue = projectUpdated;
+        }
       }
     }
 
@@ -709,10 +714,20 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to delete
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
+    let projectWidget: ProjectWidget;
+    if (this.dashboardService.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
+        projectWidget = this.dashboardService.currentSlideSubject.getValue()
+            .projectWidgets
+            .find((currentProjectWidget: ProjectWidget) => {
+                return currentProjectWidget.id === projectWidgetId;
+            });
+    } else {
+        projectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
+            .find((currentProjectWidget: ProjectWidget) => {
+                return currentProjectWidget.id === projectWidgetId;
+            });
+    }
+
 
     if (projectWidget) {
       const deleteProjectWidgetDialogRef = this.matDialog.open(DeleteProjectWidgetDialogComponent, {
@@ -735,10 +750,19 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to edit
    */
   editProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
+    let projectWidget: ProjectWidget;
+    if (this.dashboardService.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
+      projectWidget = this.dashboardService.currentSlideSubject.getValue()
+          .projectWidgets
+          .find((currentProjectWidget: ProjectWidget) => {
+              return currentProjectWidget.id === projectWidgetId;
+          });
+    } else {
+      projectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
+          .find((currentProjectWidget: ProjectWidget) => {
+              return currentProjectWidget.id === projectWidgetId;
+          });
+    }
 
     if (projectWidget) {
       this.matDialog.open(EditProjectWidgetDialogComponent, {
@@ -754,7 +778,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
    */
   updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
-    const currentProject: Project = this.dashboardService.currentDisplayedDashboardValue;
+    let currentProject: Project;
+    if (this.dashboardService.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
+        currentProject = this.dashboardService.currentSlideSubject.getValue();
+    } else {
+        currentProject = this.dashboardService.currentDisplayedDashboardValue;
+    }
 
     // update the position only if the grid item has been init
     if (this._isGridItemInit) {

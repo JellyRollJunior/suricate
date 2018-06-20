@@ -11,9 +11,10 @@
   <app-dashboard-rotation [showControls]="false" [projectId]="(project$ | async)?.id" [childs]="childs" [addSlide]="refreshFunc">
     <ng-container *ngFor="let child of childs;">
       <ng-container *carouselItem>
-        <app-dashboard-screen *ngIf="child"
+        <app-dashboard-screen *ngIf="child; else displayScreenCode"
                               [project]="child"
-                              [readOnly]="false">
+                              [readOnly]="true"
+                              [screenCode]="screenCode">
         </app-dashboard-screen>
       </ng-container>
     </ng-container>

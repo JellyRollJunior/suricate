@@ -57,6 +57,10 @@ public class ProjectDto extends AbstractDto {
      */
     private Long parent;
     /**
+     * The project duration in case of slide
+     */
+    private Integer duration;
+    /**
      * Number of column in the dashboard
      */
     @ApiModelProperty(value = "The number of columns in the dashboard")

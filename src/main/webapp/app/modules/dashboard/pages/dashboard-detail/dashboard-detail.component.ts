@@ -108,8 +108,40 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .subscribe(project => this.project$ = of(project));
 
     this.activatedRoute.params.subscribe(params => this.projectId = params['id']);
-
     this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+
+    this.dashboardService
+        .currentSlideSubject
+        .subscribe(currentSlide => {
+          console.log("SERVICE CALLED");
+          if (currentSlide !== null) {
+              console.log('CURRENT SLIDE : ' + currentSlide.name);
+              let index = this.findChildWithId(this.childs, currentSlide.id);
+              this.childs[index] = currentSlide;
+              index = this.findChildWithId(this.dashboardService.dashboardsSubject, currentSlide.id);
+              this.dashboardService.dashboardsSubject[index] = currentSlide;
+              this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
+          }
+    });
+
+
+  }
+
+
+
+  findChildWithId(tab, id) {
+      let i = 0;
+      let found = false;
+      let returnValue;
+      while (i < tab.length && found === false) {
+        if (tab[i].id === id) {
+          returnValue = i;
+          found = true;
+        }
+        ++i;
+      }
+
+      return returnValue;
   }
 
 
@@ -117,8 +149,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         return this.refresh.bind(this);
     }
 
-  refresh(){
-    this.childs = this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+  refresh() {
+    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
     this.dashboardRotation.updateCarouselSize();
   }
 

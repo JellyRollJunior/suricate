@@ -38,8 +38,8 @@ export class DashboardRotationComponent implements AfterViewInit {
     @ContentChildren(DashboardRotationItemDirective) items: QueryList<DashboardRotationItemDirective>;
     @ViewChildren(CarouselItemElement, { read: ElementRef }) private itemsElements: QueryList<ElementRef>;
     @ViewChild('carousel') private carousel: ElementRef;
-    @ViewChild('slidecircles') private slideCircles: ElementRef;
-    @ViewChild('slideName') private slideName: ElementRef;
+    @ViewChild('slidecircles') slideCircles: ElementRef;
+    @ViewChild('slideName') slideName: ElementRef;
     @ViewChild('divDots') private divDots: ElementRef;
     @Input() timing = '350ms ease-in';
     @Input() showControls = true;
@@ -120,10 +120,14 @@ export class DashboardRotationComponent implements AfterViewInit {
     handleNext() {
         this.cpt += 10;
 
-        this.cpt = 0;
-        this.next();
-        if(!this.showControls){
-            this.animateDivDots(0);
+        if (this.cpt >= this.childs[this.currentSlide].duration) {
+            this.cpt = 0;
+            if (this.nbItems > 1) {
+                this.next();
+                if (!this.showControls) {
+                    this.animateDivDots(0);
+                }
+            }
         }
     }
 
@@ -168,12 +172,17 @@ export class DashboardRotationComponent implements AfterViewInit {
     constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService) {}
 
     ngAfterViewInit() {
+
         setTimeout(() => {
             this.nbItems = this.items.length;
             this.carousel.nativeElement.style.width = this.nbItems + '00%';
-            this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
-            this.slideName.nativeElement.innerHTML = this.childs[0].name;
-            this.dashboardService.currentSlideSubject.next(this.childs[0]);
+            if (this.slideCircles.nativeElement.children.length > 0) {
+                this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
+            }
+            if(this.childs.length > 0) {
+                this.slideName.nativeElement.innerHTML = this.childs[0].name;
+                this.dashboardService.currentSlideSubject.next(this.childs[0]);
+            }
             if (!this.showControls) {
                 this.divDots.nativeElement.classList.add( 'floating');
                 this.divDots.nativeElement.style.marginLeft = ((window.innerWidth - 40) / 2) - (this.divDots.nativeElement.getBoundingClientRect().width / 2) + 'px';
@@ -181,7 +190,7 @@ export class DashboardRotationComponent implements AfterViewInit {
                     this.animateDivDots(-55);
                 }, 5000);
             }
-            if (this.showControls) {
+            if (this.showControls && this.itemsElements.length > 0) {
                 this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
             } else {
                 this.itemWidth = window.innerWidth - 40;

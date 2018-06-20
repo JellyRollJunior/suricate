@@ -243,11 +243,12 @@ public class ProjectController {
         }
 
         projectService.updateProject(
-            projectOptional.get(),
-            projectDto.getName(),
-            projectDto.getWidgetHeight(),
-            projectDto.getMaxColumn(),
-            projectDto.getCssStyle()
+                projectOptional.get(),
+                projectDto.getName(),
+                projectDto.getDuration(),
+                projectDto.getWidgetHeight(),
+                projectDto.getMaxColumn(),
+                projectDto.getCssStyle()
         );
         return ResponseEntity
             .ok()

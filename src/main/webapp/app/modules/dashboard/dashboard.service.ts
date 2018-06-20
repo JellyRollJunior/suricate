@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import { EventEmitter,Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -67,7 +67,6 @@ export class DashboardService {
   private currendDashbordSubject = new BehaviorSubject<Project>(null);
 
   currentSlideSubject = new BehaviorSubject<Project>(null);
-
   /**
    * The constructor
    *
@@ -300,7 +299,11 @@ export class DashboardService {
         .put<Project>(url, projectWidget)
         .pipe(
             map(project => {
-              this.currendDashbordSubject.next(project);
+                if (project.projectType === ProjectType.SLIDE) {
+                    this.currentSlideSubject.next(project);
+                } else {
+                    this.currentDisplayedDashboard$ = project;
+                }
               return project;
             })
         );
@@ -395,7 +398,11 @@ export class DashboardService {
         .pipe(
             map(project => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              this.currentDisplayedDashboardValue = project;
+              if (this.currendDashbordSubject.getValue().projectType === ProjectType.SLIDESHOW) {
+                  this.currentSlideSubject.next(project);
+              } else {
+                  this.currentDisplayedDashboardValue = project;
+              }
 
               return project;
             })
