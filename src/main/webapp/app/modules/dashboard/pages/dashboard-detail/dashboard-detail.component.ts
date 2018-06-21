@@ -113,15 +113,20 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.dashboardService
         .currentSlideSubject
         .subscribe(currentSlide => {
-          console.log("SERVICE CALLED");
+            setTimeout(() => {
+            console.log('SERVICE CALLED');
           if (currentSlide !== null) {
-              console.log('CURRENT SLIDE : ' + currentSlide.name);
               let index = this.findChildWithId(this.childs, currentSlide.id);
+              console.log('CURRENT SLIDE : ' + currentSlide.name + ' (index ' + index + ')');
               this.childs[index] = currentSlide;
+              this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
+              this.dashboardRotation.slideCircles.nativeElement.children[index].nativeElement.src = '../../../../assets/images/current-slide-blue.png';
               index = this.findChildWithId(this.dashboardService.dashboardsSubject, currentSlide.id);
               this.dashboardService.dashboardsSubject[index] = currentSlide;
-              this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
+              console.log('DONE');
           }
+            }, 500);
+
     });
 
 
