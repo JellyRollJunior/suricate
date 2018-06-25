@@ -105,31 +105,40 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
     this.dashboardService.currentDisplayedDashboard$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+        .subscribe(project => {
+            this.project$ = of(project);
+            if(project != null) {
+                this.projectId = project.id;
+            }
+        });
 
     this.activatedRoute.params.subscribe(params => this.projectId = params['id']);
     this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
 
-    this.dashboardService
-        .currentSlideSubject
-        .subscribe(currentSlide => {
-            setTimeout(() => {
-            console.log('SERVICE CALLED');
-          if (currentSlide !== null) {
-              let index = this.findChildWithId(this.childs, currentSlide.id);
-              console.log('CURRENT SLIDE : ' + currentSlide.name + ' (index ' + index + ')');
-              this.childs[index] = currentSlide;
-              this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
-              this.dashboardRotation.slideCircles.nativeElement.children[index].nativeElement.src = '../../../../assets/images/current-slide-blue.png';
-              index = this.findChildWithId(this.dashboardService.dashboardsSubject, currentSlide.id);
-              this.dashboardService.dashboardsSubject[index] = currentSlide;
-              console.log('DONE');
-          }
-            }, 500);
-
-    });
+      this.dashboardService
+          .dashboardsSubject
+          .pipe(takeWhile(() => this.isAlive))
+          .subscribe(projects => {
+              this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+          });
 
 
+    // this.dashboardService
+    //     .currentSlideSubject
+    //     .pipe(takeWhile(() => this.isAlive))
+    //     .subscribe(currentSlide => {
+    //       //   console.log('SERVICE CALLED');
+    //       // if (currentSlide !== null) {
+    //       //     let index = this.findChildWithId(this.childs, currentSlide.id);
+    //       //     console.log('CURRENT SLIDE : ' + currentSlide.name + ' (index ' + index + ')');
+    //       //     this.childs[index] = currentSlide;
+    //       //     this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
+    //       //     this.dashboardRotation.slideCircles.nativeElement.children[index].nativeElement.src = '../../../../assets/images/current-slide-blue.png';
+    //       //     index = this.findChildWithId(this.dashboardService.dashboardsSubject, currentSlide.id);
+    //       //     this.dashboardService.dashboardsSubject[index] = currentSlide;
+    //       //     console.log('DONE');
+    //       // }
+    //     });
   }
 
 

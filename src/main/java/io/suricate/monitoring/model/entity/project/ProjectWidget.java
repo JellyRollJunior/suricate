@@ -110,7 +110,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      * The related project
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="projectId",referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name="projectId", referencedColumnName = "ID")
     private Project project;
 
     /**

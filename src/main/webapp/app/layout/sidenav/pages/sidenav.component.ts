@@ -91,7 +91,9 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.dashboardService.currentDashboardList$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(this.dashboardService.getAllProjectsExceptSlides(projects)));
+        .subscribe(projects => {
+          this.dashboards = this.dashboardService.sortByProjectName(this.dashboardService.getAllProjectsExceptSlides(projects));
+        });
 
     this.userService.connectedUser$
         .pipe(takeWhile(() => this.isAlive))

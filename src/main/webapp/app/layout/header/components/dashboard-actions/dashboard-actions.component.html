@@ -11,7 +11,7 @@
   <mat-icon>refresh</mat-icon>
 </button>
 
-<a *ngIf="project" [routerLink]="['/tv']" [queryParams]="{token: project.token}" target="_blank">
+<a *ngIf="project" [routerLink]="['/tv']" [queryParams]="{token: project ? project.token : ''}" target="_blank">
   <button mat-mini-fab color="accent" matTooltip="{{ 'tv.view' | translate }}">
     <mat-icon>tv</mat-icon>
   </button>

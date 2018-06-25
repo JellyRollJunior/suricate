@@ -161,6 +161,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes.project) {
+      this.isGridItemInit = false;
       this.project = changes.project.currentValue;
 
       if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
@@ -802,7 +803,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       });
 
       this.dashboardService
-          .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
+          .updateWidgetPositionForProject(this.project.id, projectWidgetPositions)
           .subscribe();
     }
 
