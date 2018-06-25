@@ -69,6 +69,8 @@ public abstract class ProjectMapper {
         @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtosDefault"),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
         @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+        @Mapping(target = "slides", qualifiedByName = "toProjectDtoWithoutSlides"),
+        @Mapping(target = "parent", qualifiedByName = "toProjectDtoWithoutParentAndWithoutSlides"),
         @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoDefault(Project project);
@@ -79,11 +81,49 @@ public abstract class ProjectMapper {
      * @param project The project to transform
      * @return The related project DTO
      */
+    @Named("toProjectDtoWithoutSlides")
+    @Mappings({
+            @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
+            @Mapping(target = "slides", ignore = true),
+            @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
+            @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+            @Mapping(target = "parent", qualifiedByName = "toProjectDtoWithoutParentAndWithoutSlides"),
+            @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
+    })
+    public abstract ProjectDto toProjectDtoWithoutSlides(Project project);
+
+
+    /**
+     * Transform a project into a ProjectDto
+     *
+     * @param project The project to transform
+     * @return The related project DTO
+     */
+    @Named("toProjectDtoWithoutParentAndWithoutSlides")
+    @Mappings({
+            @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
+            @Mapping(target = "slides", ignore = true),
+            @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
+            @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+            @Mapping(target = "parent", ignore = true),
+            @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
+    })
+    public abstract ProjectDto toProjectDtoWithoutParentAndWithoutSlides(Project project);
+
+
+    /**
+     * Transform a project into a ProjectDto
+     *
+     * @param project The project to transform
+     * @return The related project DTO
+     */
     @Named("toProjectDtoWithoutProjectWidget")
     @Mappings({
         @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
+        @Mapping(target = "slides", ignore = true),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
         @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+        @Mapping(target = "parent", ignore = true),
         @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoWithoutProjectWidget(Project project);
@@ -118,7 +158,9 @@ public abstract class ProjectMapper {
     @Named("toNewProject")
     @Mappings({
         @Mapping(target = "widgets", source = "projectDto.projectWidgets", ignore = true),
-        @Mapping(target = "users", ignore = true)
+        @Mapping(target = "parent", ignore = true),
+        @Mapping(target = "users", ignore = true),
+        @Mapping(target = "slides", ignore = true)
     })
     public abstract Project toNewProject(ProjectDto projectDto);
 }

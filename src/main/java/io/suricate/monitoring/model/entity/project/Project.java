@@ -53,11 +53,6 @@ public class Project extends AbstractAuditingEntity<Long> {
     @Column(nullable = false)
     private String name;
 
-    /**
-     * The project parent
-     */
-    @Column
-    private Long parent;
 
     /**
      * The duration in case of slide
@@ -88,6 +83,19 @@ public class Project extends AbstractAuditingEntity<Long> {
      */
     @Lob
     private String cssStyle;
+
+    /**
+     * The parent project
+     */
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name="parentId", referencedColumnName = "id")
+    private Project parent;
+
+    /**
+     * The list of slides related to it
+     */
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
+    private List<Project> slides = new ArrayList<>();
 
     /**
      * The list of widgets related to it

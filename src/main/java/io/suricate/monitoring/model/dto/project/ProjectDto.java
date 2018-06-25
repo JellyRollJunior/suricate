@@ -52,10 +52,7 @@ public class ProjectDto extends AbstractDto {
      * The project type
      */
     private ProjectType projectType;
-    /**
-     * The project parent
-     */
-    private Long parent;
+
     /**
      * The project duration in case of slide
      */
@@ -80,6 +77,14 @@ public class ProjectDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The project token", required = true)
     private String token;
+    /**
+     * The project parent
+     */
+    private ProjectDto parent;
+    /**
+     * The list of slides
+     */
+    private List<ProjectDto> slides = new ArrayList<>();
     /**
      * The list of widgets
      */
