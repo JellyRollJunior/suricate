@@ -22,6 +22,8 @@ import {AddDashboardDialogComponent} from '../../../home/components/add-dashboar
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Project} from '../../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard.service';
+import {takeWhile} from 'rxjs/operators';
+import {of} from 'rxjs/observable/of';
 
 @Directive({
     selector: '.carousel-item'
@@ -57,6 +59,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     private nbItems;
 
 
+
     playHandler() {
         this.autoPlay = !this.autoPlay;
         if (this.autoPlay) { //CHECKBOX CHECKED
@@ -89,7 +92,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
         this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
         this.dashboardService.currentSlideSubject.next(this.childs[this.currentSlide]);
-        if(!this.showControls) {
+        if (!this.showControls) {
             setTimeout(() => {
                 this.animateDivDots(-55);
             }, 5000);
@@ -112,7 +115,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         }
     }
 
-    updateCarouselSize(){
+    updateCarouselSize() {
         this.nbItems++;
         this.carousel.nativeElement.style.width = this.nbItems + '00%';
     }
@@ -139,7 +142,7 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.addSlideDialogRef.componentInstance.showProjectTypes = false;
         this.addSlideDialogRef.componentInstance.parentId = this.projectId;
         const subscriber = this.addSlideDialogRef.componentInstance.onAdd.subscribe(() => {
-            this.addSlide();
+            this.updateCarouselSize();
         });
     }
 
@@ -173,13 +176,22 @@ export class DashboardRotationComponent implements AfterViewInit {
 
     ngAfterViewInit() {
 
+        this.dashboardService
+            .currendDashbordSubject
+            .subscribe(project => {
+                this.childs = project.slides;
+                setTimeout(() => {
+                    this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
+                });
+            });
+
         setTimeout(() => {
             this.nbItems = this.items.length;
             this.carousel.nativeElement.style.width = this.nbItems + '00%';
             if (this.slideCircles.nativeElement.children.length > 0) {
                 this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
             }
-            if(this.childs.length > 0) {
+            if (this.childs.length > 0) {
                 this.slideName.nativeElement.innerHTML = this.childs[0].name;
                 this.dashboardService.currentSlideSubject.next(this.childs[0]);
             }

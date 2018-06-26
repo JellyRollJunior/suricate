@@ -26,13 +26,14 @@ export class Project {
   id: number;
   name: string;
   projectType: ProjectType;
-  parent: number;
+  parent: Project;
   duration: number;
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
   token: string;
   projectWidgets: ProjectWidget[];
+  slides: Project[];
   librariesToken: string[];
   users: User[];
   websocketClients: WebsocketClient[];

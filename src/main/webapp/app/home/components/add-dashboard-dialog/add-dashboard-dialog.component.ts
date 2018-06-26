@@ -196,6 +196,7 @@ export class AddDashboardDialogComponent implements OnInit {
         ...this.dashboardForm.value
       };
       this.projectAdded.cssStyle = this.getGridCss();
+      this.projectAdded.parent = null;
 
       if (!this.isEditMode) {
         if (this.showProjectTypes) { //Dashboard creation
@@ -203,11 +204,15 @@ export class AddDashboardDialogComponent implements OnInit {
                 .createProject(this.projectAdded)
                 .subscribe(project => this.displayProject(project));
         } else { //Slide creation
-            this.projectAdded.parent = this.parentId;
+            this.projectAdded.parent = this.dashboardService.currendDashbordSubject.getValue();
             this.dashboardService
-                .createProject(this.projectAdded).subscribe(() => {
-                  this.displayProject(this.dashboardService.currendDashbordSubject.getValue());
+                .createProject(this.projectAdded).subscribe((project) => {
+
+                  let p = this.dashboardService.currendDashbordSubject.getValue();
+                  p.slides.push(project);
+                  this.dashboardService.currendDashbordSubject.next(p);
                   this.onAdd.emit();
+                  this.displayProject(p);
             });
         }
       } else {
@@ -216,7 +221,6 @@ export class AddDashboardDialogComponent implements OnInit {
             .subscribe(project => {
                 this.displayProject(this.dashboardService.currendDashbordSubject.getValue());
                 if (project.projectType === ProjectType.SLIDE) {
-                    console.log("SLIDE UPDATED");
                     this.dashboardService.currentSlideSubject.next(project);
                 }
             });

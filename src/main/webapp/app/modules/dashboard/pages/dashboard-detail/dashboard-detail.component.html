@@ -11,8 +11,8 @@
 
     <!-- Dashboard screen SLIDESHOW -->
     <ng-template #slideshow>
-        <app-dashboard-rotation [projectId]="(project$ | async).id" [childs]="childs" [addSlide]="refreshFunc">
-            <ng-container *ngFor="let child of childs;">
+        <app-dashboard-rotation [projectId]="(project$ | async).id" [childs]="(project$ | async).slides" [addSlide]="refreshFunc">
+            <ng-container *ngFor="let child of (project$ | async).slides;">
                 <ng-container *carouselItem>
                     <app-dashboard-screen *ngIf="child"
                                           [project]="child"

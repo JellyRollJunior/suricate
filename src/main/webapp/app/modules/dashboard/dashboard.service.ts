@@ -465,7 +465,7 @@ export class DashboardService {
       const allProjects = this.dashboardsSubject.getValue();
 
       allProjects.forEach((project) => {
-          if (project.projectType === ProjectType.SLIDE && project.parent == id) {
+          if (project.projectType === ProjectType.SLIDE && project.parent.id == id) {
               filteredProjects.push(project);
           }
       });

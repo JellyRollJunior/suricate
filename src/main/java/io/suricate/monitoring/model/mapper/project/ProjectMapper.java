@@ -158,7 +158,6 @@ public abstract class ProjectMapper {
     @Named("toNewProject")
     @Mappings({
         @Mapping(target = "widgets", source = "projectDto.projectWidgets", ignore = true),
-        @Mapping(target = "parent", ignore = true),
         @Mapping(target = "users", ignore = true),
         @Mapping(target = "slides", ignore = true)
     })

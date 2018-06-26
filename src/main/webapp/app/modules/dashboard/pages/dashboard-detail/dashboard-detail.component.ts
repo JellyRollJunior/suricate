@@ -158,15 +158,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       return returnValue;
   }
 
-
-    get refreshFunc() {
-        return this.refresh.bind(this);
-    }
-
-  refresh() {
-    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
-    this.dashboardRotation.updateCarouselSize();
-  }
+  //
+  //   get refreshFunc() {
+  //       return this.refresh.bind(this);
+  //   }
+  //
+  // refresh() {
+  //   //this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+  //   //this.dashboardRotation.updateCarouselSize();
+  // }
 
 
   /**
