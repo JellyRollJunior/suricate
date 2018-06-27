@@ -90,6 +90,7 @@ export class DashboardActionsComponent implements OnInit {
       data: {projectId: this.project.id}
     });
   }
+  
 
   /**
    * Open the edit widget dialog

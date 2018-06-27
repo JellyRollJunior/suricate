@@ -202,7 +202,12 @@ export class AddDashboardDialogComponent implements OnInit {
         if (this.showProjectTypes) { //Dashboard creation
             this.dashboardService
                 .createProject(this.projectAdded)
-                .subscribe(project => this.displayProject(project));
+                .subscribe(project => {
+                    this.displayProject(project);
+                    let d = this.dashboardService.dashboardsSubject.getValue();
+                    d.push(project);
+                    this.dashboardService.dashboardsSubject.next(d);
+                });
         } else { //Slide creation
             this.projectAdded.parent = this.dashboardService.currendDashbordSubject.getValue();
             this.dashboardService
@@ -218,15 +223,31 @@ export class AddDashboardDialogComponent implements OnInit {
       } else {
         this.dashboardService
             .editProject(this.projectAdded)
-            .subscribe(project => {
-                this.displayProject(this.dashboardService.currendDashbordSubject.getValue());
+            .subscribe((project) => {
+                let p = this.dashboardService.currendDashbordSubject.getValue();
                 if (project.projectType === ProjectType.SLIDE) {
-                    this.dashboardService.currentSlideSubject.next(project);
+                    p.slides[this.findChildWithId(p.slides, project.id)] = project;
                 }
+                this.displayProject(p);
             });
       }
     }
   }
+
+    findChildWithId(tab, id) {
+        let i = 0;
+        let found = false;
+        let returnValue;
+        while (i < tab.length && found === false) {
+            if (tab[i].id === id) {
+                returnValue = i;
+                found = true;
+            }
+            ++i;
+        }
+
+        return returnValue;
+    }
 
   displayProject(project: Project) {
     this.projectAdded = project;

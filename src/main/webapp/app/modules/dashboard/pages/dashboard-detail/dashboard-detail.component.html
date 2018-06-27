@@ -2,7 +2,7 @@
 
 <!-- Dashboard screen DEFAULT -->
 <div *ngIf="(project$ | async)?.projectWidgets; else dashboardNoWidget">
-    <div *ngIf="(project$ | async).projectType === projectType.DEFAULT; else slideshow">
+    <div *ngIf="(project$ | async).projectType !== projectType.SLIDESHOW; else slideshow">
         <app-dashboard-screen *ngIf="(project$ | async)"
                               [project]="(project$ | async)"
                               [readOnly]="false">

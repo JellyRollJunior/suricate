@@ -715,6 +715,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to delete
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
+    console.log("BUTTON DELETE PUSHED");
     let projectWidget: ProjectWidget;
     if (this.dashboardService.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
         projectWidget = this.dashboardService.currentSlideSubject.getValue()

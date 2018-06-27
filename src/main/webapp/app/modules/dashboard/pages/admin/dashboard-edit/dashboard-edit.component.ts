@@ -23,6 +23,7 @@ import {Project} from '../../../../../shared/model/dto/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
+import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
 
 /**
  * Component that display the edit page for a dashboard
@@ -108,6 +109,8 @@ export class DashboardEditComponent implements OnInit {
     this
         .dashboardService
         .editProject({...this.dashboard, ...this.editDashboardForm.value})
-        .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
+        .subscribe((project) => {
+          this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
+        });
   }
 }

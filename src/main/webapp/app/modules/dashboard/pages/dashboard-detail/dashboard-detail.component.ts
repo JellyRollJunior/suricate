@@ -141,22 +141,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     //     });
   }
 
-
-
-  findChildWithId(tab, id) {
-      let i = 0;
-      let found = false;
-      let returnValue;
-      while (i < tab.length && found === false) {
-        if (tab[i].id === id) {
-          returnValue = i;
-          found = true;
-        }
-        ++i;
-      }
-
-      return returnValue;
+    this.dashboardService
+        .currentSlideSubject
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe((project) => {
+            if (project) {
+                console.log("SLIDE : " + project.name);
+            }
+        });
   }
+
+
 
   //
   //   get refreshFunc() {

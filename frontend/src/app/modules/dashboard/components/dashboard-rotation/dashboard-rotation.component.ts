@@ -58,7 +58,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     private sub;
     private nbItems;
 
-
+    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService) {}
 
     playHandler() {
         this.autoPlay = !this.autoPlay;
@@ -172,17 +172,20 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.animate(offset);
     }
 
-    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService) {}
+
 
     ngAfterViewInit() {
 
         this.dashboardService
             .currendDashbordSubject
             .subscribe(project => {
+                this.dashboardService.currentSlideSubject.next(project.slides[this.currentSlide]);
                 this.childs = project.slides;
                 setTimeout(() => {
                     this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
-                });
+                    this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
+                }, 100);
+
             });
 
         setTimeout(() => {
@@ -193,7 +196,7 @@ export class DashboardRotationComponent implements AfterViewInit {
             }
             if (this.childs.length > 0) {
                 this.slideName.nativeElement.innerHTML = this.childs[0].name;
-                this.dashboardService.currentSlideSubject.next(this.childs[0]);
+                //this.dashboardService.currentSlideSubject.next(this.childs[0]);
             }
             if (!this.showControls) {
                 this.divDots.nativeElement.classList.add( 'floating');

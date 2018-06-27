@@ -97,7 +97,9 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.userService.connectedUser$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(connectedUser => this.connectedUser = connectedUser);
+        .subscribe(connectedUser => {
+          this.connectedUser = connectedUser;
+        });
 
     this.userService.getConnectedUser().subscribe();
     this.isUserAdmin = this.userService.isAdmin();

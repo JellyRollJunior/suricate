@@ -144,13 +144,8 @@ export class AddWidgetDialogComponent implements OnInit {
           .subscribe((data) => {
             if (data.projectType === ProjectType.SLIDE) {
               const p = this.dashboardService.currendDashbordSubject.getValue();
-              let i = 0;
-             while (i < p.slides.length) {
-                if (p.slides[i].id === data.id) {
-                  p.slides[i] = data;
-                }
-                ++i;
-              }
+              const index = this.dashboardService.findChildWithId(p.slides, data.id);
+              p.slides[index] = data;
               this.dashboardService.currendDashbordSubject.next(p);
             }
             this.addWidgetDialogRef.close();
@@ -182,6 +177,5 @@ export class AddWidgetDialogComponent implements OnInit {
     } else {
       return this.domSanitizer.bypassSecurityTrustUrl(``);
     }
-
   }
 }

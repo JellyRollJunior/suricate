@@ -114,6 +114,7 @@ export class LoginComponent implements OnInit {
               error => {
                 // Authentication failed
                 this.formSubmitAttempt = false;
+                console.error(error);
               });
     }
   }

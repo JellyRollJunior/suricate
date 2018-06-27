@@ -298,7 +298,7 @@ export class DashboardService {
         .httpClient
         .put<Project>(url, projectWidget)
         .pipe(
-            map(project => {
+            map( (project) => {
                 if (project.projectType === ProjectType.SLIDE) {
                     this.currentSlideSubject.next(project);
                 } else {
@@ -398,8 +398,11 @@ export class DashboardService {
         .pipe(
             map(project => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              if (this.currendDashbordSubject.getValue().projectType === ProjectType.SLIDESHOW) {
-                  this.currentSlideSubject.next(project);
+              if (this.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
+                  const p = this.currentDisplayedDashboardValue;
+                  const index = this.findChildWithId(p.slides, project.id);
+                  p.slides[index] = project;
+                  this.currentDisplayedDashboardValue = p;
               } else {
                   this.currentDisplayedDashboardValue = project;
               }
@@ -458,6 +461,21 @@ export class DashboardService {
 
       return filteredProjects;
   }
+
+    findChildWithId(tab, id) {
+        let i = 0;
+        let found = false;
+        let returnValue;
+        while (i < tab.length && found === false) {
+            if (tab[i].id === id) {
+                returnValue = i;
+                found = true;
+            }
+            ++i;
+        }
+
+        return returnValue;
+    }
 
   getSlidesByParentId(id: number) {
       let filteredProjects: Project[];
