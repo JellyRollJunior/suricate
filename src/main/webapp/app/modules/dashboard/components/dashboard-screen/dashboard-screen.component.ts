@@ -16,17 +16,17 @@
 
 
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  SimpleChanges,
-  ViewChildren
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef, EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    SimpleChanges,
+    ViewChildren
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
@@ -140,6 +140,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   displayScreenCode = false;
 
   /**
+   * Tell if the connection is done with the backend
+   */
+  @Input() isConnectionDone = false;
+
+  /**
+   * Allow to tell the parent component the connection is done
+   */
+  @Input() onConnectionDone: Function;
+
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -155,6 +166,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
               private changeDetectorRef: ChangeDetectorRef) {
   }
 
+
+  connectToBackend() {
+    if (this.project.projectType !== ProjectType.DEFAULT) {
+        this.onConnectionDone();
+    }
+    this.websocketService.startConnection();
+  }
+
+
   /**
    * Call before ngOnInit and at every changes
    * @param {SimpleChanges} changes
@@ -163,11 +183,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (changes.project) {
       this.isGridItemInit = false;
       this.project = changes.project.currentValue;
-
       if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
         this.unsubscribeToDestinations();
         this.disconnect();
-        this.websocketService.startConnection();
+        if (this.project.projectType === ProjectType.DEFAULT  || !this.isConnectionDone) {
+            this.connectToBackend();
+        }
         this.subscribeToDestinations();
       }
     }
@@ -182,8 +203,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     }
 
     if (this.project) {
+
+      if (this.project.projectType === ProjectType.DEFAULT  || !this.isConnectionDone) {
+          this.connectToBackend();
+      }
+
       this.initGridStackOptions(this.project);
-      this.websocketService.startConnection();
       this.subscribeToDestinations();
 
       this.websocketService
@@ -715,7 +740,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to delete
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    console.log("BUTTON DELETE PUSHED");
     let projectWidget: ProjectWidget;
     if (this.dashboardService.currentDisplayedDashboardValue.projectType === ProjectType.SLIDESHOW) {
         projectWidget = this.dashboardService.currentSlideSubject.getValue()

@@ -1,0 +1,31 @@
+<h1 matDialogTitle class="little title" #title></h1>
+<p #subtitle></p>
+
+<div fxLayout="col wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
+
+  <!-- Add Dashboard Card -->
+  <mat-card id="add-dashboard-card" fxFlex="30%">
+    <a (click)="createClassicDashboard()">
+      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon>add_box</mat-icon>
+      </mat-card-content>
+    </a>
+    <mat-card-actions align="start">
+      <button #addDashboardButton mat-button (click)="createClassicDashboard()">New classic dashboard</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Other dashboards -->
+  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%">
+    <a (click)="copyToDashboardSlide(dashboard.id)">
+      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon>dashboard</mat-icon>
+      </mat-card-content>
+    </a>
+    <mat-card-actions align="start">
+      <button mat-button (click)="copyToDashboardSlide(dashboard.id)">
+        new <span>{{ dashboard.name }}</span> slide
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

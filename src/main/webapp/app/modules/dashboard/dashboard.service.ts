@@ -462,6 +462,18 @@ export class DashboardService {
       return filteredProjects;
   }
 
+    getAllSlideshowsExceptCurrent(projects: Project[]): Project[] {
+        let filteredProjects: Project[];
+        filteredProjects = [];
+        projects.forEach((project) => {
+            if (project.projectType === ProjectType.SLIDESHOW && project.id !== this.currendDashbordSubject.getValue().id) {
+                filteredProjects.push(project);
+            }
+        });
+
+        return filteredProjects;
+    }
+
     findChildWithId(tab, id) {
         let i = 0;
         let found = false;

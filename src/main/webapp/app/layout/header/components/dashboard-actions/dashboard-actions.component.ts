@@ -25,6 +25,7 @@ import {ScreenService} from '../../../../modules/dashboard/screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
 import {ProjectType} from '../../../../model/dto/enums/ProjectType';
+import {CopyDashboardDialogComponent} from '../../../../../modules/home/components/copy-dashboard-dialog/copy-dashboard-dialog.component';
 
 /**
  * Hold the header dashboard actions
@@ -41,6 +42,11 @@ export class DashboardActionsComponent implements OnInit {
    * @type {MatDialogRef<AddWidgetDialogComponent>}
    */
   addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+
+  /**
+   * Dialog reference used for copy a dashboard
+   */
+  copyDashboardDialogRef: MatDialogRef<CopyDashboardDialogComponent>;
 
   /**
    * Dialog reference used for edit a dashboard
@@ -90,7 +96,17 @@ export class DashboardActionsComponent implements OnInit {
       data: {projectId: this.project.id}
     });
   }
-  
+
+  /**
+   * Open the copy dashboard dialog
+   */
+    openCopyDashboardDialog() {
+      const projId = this.project.projectType === ProjectType.SLIDESHOW ? this.dashboardService.currentSlideSubject.getValue().id : this.project.id;
+      this.copyDashboardDialogRef = this.dialog.open(CopyDashboardDialogComponent, {
+          minWidth: 900,
+          data: {projectId: projId}
+      });
+    }
 
   /**
    * Open the edit widget dialog

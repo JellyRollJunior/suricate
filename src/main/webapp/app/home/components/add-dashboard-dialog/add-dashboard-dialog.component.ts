@@ -204,9 +204,11 @@ export class AddDashboardDialogComponent implements OnInit {
                 .createProject(this.projectAdded)
                 .subscribe(project => {
                     this.displayProject(project);
-                    let d = this.dashboardService.dashboardsSubject.getValue();
-                    d.push(project);
-                    this.dashboardService.dashboardsSubject.next(d);
+                    if (!this.showProjectTypes) {
+                        let d = this.dashboardService.dashboardsSubject.getValue();
+                        d.push(project);
+                        this.dashboardService.dashboardsSubject.next(d);
+                    }
                 });
         } else { //Slide creation
             this.projectAdded.parent = this.dashboardService.currendDashbordSubject.getValue();

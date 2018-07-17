@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, QueryList, ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of} from 'rxjs';
@@ -25,6 +25,7 @@ import {Project} from '../../../../shared/model/dto/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 import {DashboardRotationComponent} from '../components/dashboard-rotation/dashboard-rotation.component';
 import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
+import {DashboardScreenComponent} from '../components/dashboard-screen/dashboard-screen.component';
 
 /**
  * Component that display a specific dashboard
@@ -78,7 +79,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
      */
     @ViewChild(DashboardRotationComponent) dashboardRotation: DashboardRotationComponent;
 
-  /**
+    /**
+     * All dashboard screen components
+     */
+    @ViewChild('screen') dashboardScreen: QueryList<DashboardScreenComponent>;
+
+    /**
+     * Tell if the connection is done with the backend
+     */
+    connectionDone = false;
+
+    /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -87,7 +98,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private matDialog: MatDialog) {
+              private matDialog: MatDialog,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**
@@ -107,7 +119,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => {
             this.project$ = of(project);
-            if(project != null) {
+            if (project != null) {
                 this.projectId = project.id;
             }
         });
@@ -145,24 +157,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .currentSlideSubject
         .pipe(takeWhile(() => this.isAlive))
         .subscribe((project) => {
-            if (project) {
-                console.log("SLIDE : " + project.name);
-            }
+            // if (project) {
+            //     console.log('SLIDE : ' + project.name);
+            // }
         });
+
   }
 
+  get setConnectionDoneFunc() {
+      return this.setConnectionDone.bind(this);
+  }
 
-
-  //
-  //   get refreshFunc() {
-  //       return this.refresh.bind(this);
-  //   }
-  //
-  // refresh() {
-  //   //this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
-  //   //this.dashboardRotation.updateCarouselSize();
-  // }
-
+  setConnectionDone() {
+      this.connectionDone = true;
+      this.changeDetectorRef.detectChanges();
+  }
 
   /**
    * The add widget dialog ref

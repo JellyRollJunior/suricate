@@ -13,9 +13,11 @@
 </div>
 
 <section class="carousel-wrapper" [ngStyle]="carouselWrapperStyle">
-    <ul class="carousel-inner" #carousel>
+    <ul class="carousel-inner" #carousel [ngStyle]="{'width': items.length*100+'%'}" >
         <li *ngFor="let item of items;" class="carousel-item">
             <ng-container [ngTemplateOutlet]="item.tpl"></ng-container>
         </li>
     </ul>
 </section>
+
+

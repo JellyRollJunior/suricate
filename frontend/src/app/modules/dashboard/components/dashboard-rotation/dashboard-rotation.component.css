@@ -9,7 +9,7 @@ ul {
 
 .carousel-wrapper {
     overflow: hidden;
-    z-index:-1;
+    /*z-index:-1;*/
 }
 
 .carousel-item{
@@ -19,6 +19,7 @@ ul {
 .carousel-inner {
     display: flex;
 }
+
 
 section {
     width : 100%;

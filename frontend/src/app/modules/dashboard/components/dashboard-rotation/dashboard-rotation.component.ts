@@ -1,5 +1,5 @@
 import {
-    AfterViewInit,
+    AfterViewInit, ChangeDetectorRef,
     Component,
     ContentChildren,
     Directive,
@@ -47,7 +47,6 @@ export class DashboardRotationComponent implements AfterViewInit {
     @Input() showControls = true;
     @Input() projectId;
     @Input('childs') childs: Project[];
-    @Input() addSlide: Function;
     addSlideDialogRef: MatDialogRef<AddDashboardDialogComponent>;
     private player: AnimationPlayer;
     private itemWidth: number;
@@ -56,9 +55,16 @@ export class DashboardRotationComponent implements AfterViewInit {
     private cpt = 0;
     private autoPlay = true;
     private sub;
-    private nbItems;
+    numberChilds: any;
 
-    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService) {}
+    /**
+     * Tell if the component is displayed
+     *
+     * @type {boolean}
+     */
+    isAlive = true;
+
+    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService, private changeDetectorRef: ChangeDetectorRef) {}
 
     playHandler() {
         this.autoPlay = !this.autoPlay;
@@ -74,11 +80,11 @@ export class DashboardRotationComponent implements AfterViewInit {
     next() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
-        if ( this.currentSlide + 1 === this.nbItems ) {
+        if ( this.currentSlide + 1 === this.childs.length ) {
             offset = 0;
             this.currentSlide = 0;
         } else {
-            this.currentSlide = (this.currentSlide + 1) % this.nbItems;
+            this.currentSlide = (this.currentSlide + 1) % this.childs.length;
             offset = this.currentSlide * (this.itemWidth);
         }
 
@@ -116,8 +122,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     }
 
     updateCarouselSize() {
-        this.nbItems++;
-        this.carousel.nativeElement.style.width = this.nbItems + '00%';
+        this.carousel.nativeElement.style.width = this.childs.length + '00%';
     }
 
     handleNext() {
@@ -125,7 +130,7 @@ export class DashboardRotationComponent implements AfterViewInit {
 
         if (this.cpt >= this.childs[this.currentSlide].duration) {
             this.cpt = 0;
-            if (this.nbItems > 1) {
+            if (this.childs.length > 1) {
                 this.next();
                 if (!this.showControls) {
                     this.animateDivDots(0);
@@ -162,10 +167,10 @@ export class DashboardRotationComponent implements AfterViewInit {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
         if ( this.currentSlide === 0 ) {
-            offset = (this.nbItems - 1) * (this.itemWidth);
-            this.currentSlide = this.nbItems - 1;
+            offset = (this.childs.length - 1) * (this.itemWidth);
+            this.currentSlide = this.childs.length - 1;
         } else {
-            this.currentSlide = ((this.currentSlide - 1) + this.nbItems) % this.nbItems;
+            this.currentSlide = ((this.currentSlide - 1) + this.childs.length) % this.childs.length;
             offset = this.currentSlide * (this.itemWidth);
         }
 
@@ -178,46 +183,56 @@ export class DashboardRotationComponent implements AfterViewInit {
 
         this.dashboardService
             .currendDashbordSubject
+            .pipe(takeWhile(() => this.isAlive))
             .subscribe(project => {
+
+                this.currentSlide = 0;
+                this.animate(0);
                 this.dashboardService.currentSlideSubject.next(project.slides[this.currentSlide]);
                 this.childs = project.slides;
-                setTimeout(() => {
-                    this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
-                    this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
-                }, 100);
 
-            });
+                setTimeout(() => {
+                    if (this.childs.length > 0) {
+                        this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/current-slide-blue.png';
+                        this.slideName.nativeElement.innerHTML = this.childs[this.currentSlide].name;
+                    } else {
+                        this.slideName.nativeElement.innerHTML = '';
+                    }
+                }, 100);
+        });
 
         setTimeout(() => {
-            this.nbItems = this.items.length;
-            this.carousel.nativeElement.style.width = this.nbItems + '00%';
-            if (this.slideCircles.nativeElement.children.length > 0) {
-                this.slideCircles.nativeElement.children[0].src = '../../../../../assets/images/current-slide-blue.png';
-            }
-            if (this.childs.length > 0) {
-                this.slideName.nativeElement.innerHTML = this.childs[0].name;
-                //this.dashboardService.currentSlideSubject.next(this.childs[0]);
-            }
             if (!this.showControls) {
-                this.divDots.nativeElement.classList.add( 'floating');
+                this.divDots.nativeElement.classList.add('floating');
                 this.divDots.nativeElement.style.marginLeft = ((window.innerWidth - 40) / 2) - (this.divDots.nativeElement.getBoundingClientRect().width / 2) + 'px';
                 setTimeout(() => {
                     this.animateDivDots(-55);
                 }, 5000);
             }
-            if (this.showControls && this.itemsElements.length > 0) {
-                this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
-            } else {
-                this.itemWidth = window.innerWidth - 40;
-            }
-            this.carouselWrapperStyle = {
-                width: `${this.itemWidth}px`
-            };
         }, 100);
+
+        if (this.showControls && this.itemsElements.length > 0) {
+            this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
+        } else {
+            this.itemWidth = window.innerWidth - 40;
+        }
+        this.carouselWrapperStyle = {
+            width: `${this.itemWidth}px`
+        };
+
 
         //INITIAL CONDITIONS
         this.sub = Observable.interval(10000)
+            .pipe(takeWhile(() => this.isAlive))
             .subscribe((val) => { this.handleNext(); });
+    }
+
+    /**
+     * When the component is destroyed
+     */
+    ngOnDestroy() {
+        this.isAlive = false;
+        this.sub.unsubscribe();
     }
 
 

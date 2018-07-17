@@ -8,11 +8,13 @@
 </div>
 
 <ng-template #slideshow>
-  <app-dashboard-rotation [showControls]="false" [projectId]="(project$ | async)?.id" [childs]="childs" [addSlide]="refreshFunc">
-    <ng-container *ngFor="let child of childs;">
+  <app-dashboard-rotation *ngIf="(project$ | async)" [showControls]="false" [projectId]="(project$ | async).id" [childs]="(project$ | async).slides">
+    <ng-container *ngFor="let child of (project$ | async).slides;">
       <ng-container *carouselItem>
         <app-dashboard-screen *ngIf="child; else displayScreenCode"
                               [project]="child"
+                              [isConnectionDone]="connectionDone"
+                              [onConnectionDone]="setConnectionDoneFunc"
                               [readOnly]="true"
                               [screenCode]="screenCode">
         </app-dashboard-screen>

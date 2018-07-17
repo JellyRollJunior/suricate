@@ -19,6 +19,8 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../shared/shared.module';
+import {AuthGuard} from '../shared/auth/guards/auth.guard';
+import { CopyDashboardDialogComponent } from './components/copy-dashboard-dialog/copy-dashboard-dialog.component';
 
 import {HomeComponent} from './home.component';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
@@ -34,13 +36,15 @@ import {homeRoutes} from './home.route';
   ],
   declarations: [
     HomeComponent,
-    AddDashboardDialogComponent
+    AddDashboardDialogComponent,
+    CopyDashboardDialogComponent
   ],
   exports: [
     HomeComponent
   ],
   entryComponents: [
-    AddDashboardDialogComponent
+    AddDashboardDialogComponent,
+    CopyDashboardDialogComponent
   ]
 })
 export class HomeModule {

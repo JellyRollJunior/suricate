@@ -11,11 +11,13 @@
 
     <!-- Dashboard screen SLIDESHOW -->
     <ng-template #slideshow>
-        <app-dashboard-rotation [projectId]="(project$ | async).id" [childs]="(project$ | async).slides" [addSlide]="refreshFunc">
+        <app-dashboard-rotation [projectId]="(project$ | async).id" [childs]="(project$ | async).slides" >
             <ng-container *ngFor="let child of (project$ | async).slides;">
                 <ng-container *carouselItem>
-                    <app-dashboard-screen *ngIf="child"
+                    <app-dashboard-screen #screen *ngIf="child"
                                           [project]="child"
+                                          [isConnectionDone]="connectionDone"
+                                          [onConnectionDone]="setConnectionDoneFunc"
                                           [readOnly]="false">
                     </app-dashboard-screen>
                 </ng-container>
