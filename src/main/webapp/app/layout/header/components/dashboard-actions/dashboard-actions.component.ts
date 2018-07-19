@@ -31,114 +31,114 @@ import {CopyDashboardDialogComponent} from '../../../../../modules/home/componen
  * Hold the header dashboard actions
  */
 @Component({
-  selector: 'app-dashboard-actions',
-  templateUrl: './dashboard-actions.component.html',
-  styleUrls: ['./dashboard-actions.component.css']
+    selector: 'app-dashboard-actions',
+    templateUrl: './dashboard-actions.component.html',
+    styleUrls: ['./dashboard-actions.component.css']
 })
 export class DashboardActionsComponent implements OnInit {
 
-  /**
-   * Dialog reference used for add a widget
-   * @type {MatDialogRef<AddWidgetDialogComponent>}
-   */
-  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+    /**
+     * Dialog reference used for add a widget
+     * @type {MatDialogRef<AddWidgetDialogComponent>}
+     */
+    addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
-  /**
-   * Dialog reference used for copy a dashboard
-   */
-  copyDashboardDialogRef: MatDialogRef<CopyDashboardDialogComponent>;
+    /**
+     * Dialog reference used for copy a dashboard
+     */
+    copyDashboardDialogRef: MatDialogRef<CopyDashboardDialogComponent>;
 
-  /**
-   * Dialog reference used for edit a dashboard
-   * @type {MatDialogRef<AddDashboardDialogComponent>}
-   */
-  editDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
+    /**
+     * Dialog reference used for edit a dashboard
+     * @type {MatDialogRef<AddDashboardDialogComponent>}
+     */
+    editDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
-  /**
-   * Dialog reference used for TV Management
-   * @type {MatDialogRef<TvManagementDialogComponent>}
-   */
-  tvManagementDialogRef: MatDialogRef<TvManagementDialogComponent>;
+    /**
+     * Dialog reference used for TV Management
+     * @type {MatDialogRef<TvManagementDialogComponent>}
+     */
+    tvManagementDialogRef: MatDialogRef<TvManagementDialogComponent>;
 
-  /**
-   * The current project id
-   * @type {Project}
-   */
-  project: Project;
+    /**
+     * The current project id
+     * @type {Project}
+     */
+    project: Project;
 
-  /**
-   * The constructor
-   *
-   * @param {MatDialog} matDialog The mat dialog to inject
-   * @param {ActivatedRoute} activatedRoute The activated route
-   * @param {ScreenService} screenService The screen service
-   * @param {DashboardService} dashboardService The dashboard service
-   */
-  constructor(private matDialog: MatDialog,
-              private activatedRoute: ActivatedRoute,
-              private screenService: ScreenService,
-              private dashboardService: DashboardService) {
-  }
+    /**
+     * The constructor
+     *
+     * @param {MatDialog} matDialog The mat dialog to inject
+     * @param {ActivatedRoute} activatedRoute The activated route
+     * @param {ScreenService} screenService The screen service
+     * @param {DashboardService} dashboardService The dashboard service
+     */
+    constructor(private matDialog: MatDialog,
+                private activatedRoute: ActivatedRoute,
+                private screenService: ScreenService,
+                private dashboardService: DashboardService) {
+    }
 
-  /**
-   * When the component is init
-   */
-  ngOnInit() {
-    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
-  }
+    /**
+     * When the component is init
+     */
+    ngOnInit() {
+        this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
+    }
 
-  /**
-   * Open the Add widget dialog
-   */
-  openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      data: {projectId: this.project.id}
-    });
-  }
+    /**
+     * Open the Add widget dialog
+     */
+    openAddWidgetDialog() {
+        this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+            minWidth: 900,
+            data: {projectId: this.project.id}
+        });
+    }
 
-  /**
-   * Open the copy dashboard dialog
-   */
+    /**
+     * Open the copy dashboard dialog
+     */
     openCopyDashboardDialog() {
-      const projId = this.project.projectType === ProjectType.SLIDESHOW ? this.dashboardService.currentSlideSubject.getValue().id : this.project.id;
-      this.copyDashboardDialogRef = this.dialog.open(CopyDashboardDialogComponent, {
-          minWidth: 900,
-          data: {projectId: projId}
-      });
+        const projId = this.project.projectType === ProjectType.SLIDESHOW ? this.dashboardService.currentSlideSubject.getValue().id : this.project.id;
+        this.copyDashboardDialogRef = this.matDialog.open(CopyDashboardDialogComponent, {
+            minWidth: 900,
+            data: {projectId: projId}
+        });
     }
 
-  /**
-   * Open the edit widget dialog
-   */
-  openEditDashboardDialog() {
-    let projId = this.project.id;
-    if (this.project.projectType === ProjectType.SLIDESHOW) {
-      projId = this.dashboardService.currentDisplayedDashboardValue.id;
+    /**
+     * Open the edit widget dialog
+     */
+    openEditDashboardDialog() {
+        let projId = this.project.id;
+        if (this.project.projectType === ProjectType.SLIDESHOW) {
+            projId = this.dashboardService.currentDisplayedDashboardValue.id;
+        }
+
+        this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
+            minWidth: 900,
+            data: {projectId: projId}
+        });
+
+        this.editDashboardDialogRef.componentInstance.showProjectTypes = false;
     }
 
-    this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
-      minWidth: 900,
-      data: {projectId: projId}
-    });
+    /**
+     * Open the tv management dialog
+     */
+    openTvManagementDialog() {
+        this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
+            minWidth: 900,
+            data: {projectId: this.project.id}
+        });
+    }
 
-    this.editDashboardDialogRef.componentInstance.showProjectTypes = false;
-  }
-
-  /**
-   * Open the tv management dialog
-   */
-  openTvManagementDialog() {
-    this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
-      minWidth: 900,
-      data: {projectId: this.project.id}
-    });
-  }
-
-  /**
-   * Refresh every screens for the current dashboard
-   */
-  refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
-  }
+    /**
+     * Refresh every screens for the current dashboard
+     */
+    refreshConnectedScreens() {
+        this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
+    }
 }

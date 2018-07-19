@@ -160,21 +160,21 @@ export class AddDashboardDialogComponent implements OnInit {
     });
   }
 
-  /**
-   * Initialisation of the user form
-   */
-  private initUserForm() {
-    // Init Add user form
-    this.addUserForm = this.formBuilder.group({
-      'username': ['', [Validators.required]]
-    });
-    // Populate user autocomplete
-    this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
-    );
-  }
+    /**
+     * Initialisation of the user form
+     */
+    private initUserForm() {
+        // Init Add user form
+        this.addUserForm = this.formBuilder.group({
+            'username': ['', [Validators.required]]
+        });
+        // Populate user autocomplete
+        this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
+        );
+    }
 
   /**
    * Check if the field is valid

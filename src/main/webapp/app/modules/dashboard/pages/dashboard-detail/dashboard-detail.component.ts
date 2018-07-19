@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit, QueryList, ChangeDetectorRef} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of} from 'rxjs';
@@ -31,47 +31,47 @@ import {DashboardScreenComponent} from '../components/dashboard-screen/dashboard
  * Component that display a specific dashboard
  */
 @Component({
-  selector: 'app-dashboard-detail',
-  templateUrl: './dashboard-detail.component.html',
-  styleUrls: ['./dashboard-detail.component.css']
+    selector: 'app-dashboard-detail',
+    templateUrl: './dashboard-detail.component.html',
+    styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
 
-  /**
-   * The widget dialog ref
-   * @type {MatDialogRef<AddWidgetDialogComponent>}
-   * @private
-   */
-  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+    /**
+     * The widget dialog ref
+     * @type {MatDialogRef<AddWidgetDialogComponent>}
+     * @private
+     */
+    private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
-  /**
-   * Tell if the component is displayed
-   * @type {boolean}
-   * @private
-   */
-  private isAlive = true;
+    /**
+     * Tell if the component is displayed
+     * @type {boolean}
+     * @private
+     */
+    private isAlive = true;
 
-  /**
-   * The project as observable
-   * @type {Observable<Project>}
-   */
-  project$: Observable<Project>;
+    /**
+     * The project as observable
+     * @type {Observable<Project>}
+     */
+    project$: Observable<Project>;
 
     /**
      * The current project id
      */
-  projectId;
+    projectId;
 
-  /**
-   * Child Projects as observables
-   */
-  childs: Project[];
+    /**
+     * Child Projects as observables
+     */
+    childs: Project[];
 
     /**
      * Project type enum reference
      * @type {ProjectType}
      */
-  projectType = ProjectType;
+    projectType = ProjectType;
 
     /**
      * The dashboard rotation
@@ -90,104 +90,83 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     connectionDone = false;
 
     /**
-   * constructor
-   *
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The mat dialog service
-   */
-  constructor(private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService,
-              private matDialog: MatDialog,
-              private changeDetectorRef: ChangeDetectorRef) {
-  }
+     * constructor
+     *
+     * @param {ActivatedRoute} activatedRoute The activated route service
+     * @param {DashboardService} dashboardService The dashboard service
+     * @param {MatDialog} matDialog The mat dialog service
+     */
+    constructor(private activatedRoute: ActivatedRoute,
+                private dashboardService: DashboardService,
+                private matDialog: MatDialog,
+                private changeDetectorRef: ChangeDetectorRef) {
+    }
 
-  /**
-   * Init objects
-   */
-  ngOnInit() {
-    // Global init from project
-    this.activatedRoute.params.subscribe(params => {
-      this.dashboardService
-          .getOneById(+params['id'])
-          .subscribe(project => {
-            this.dashboardService.currentDisplayedDashboardValue = project;
-          });
-    });
-
-    this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => {
-            this.project$ = of(project);
-            if (project != null) {
-                this.projectId = project.id;
-            }
+    /**
+     * Init objects
+     */
+    ngOnInit() {
+        // Global init from project
+        this.activatedRoute.params.subscribe(params => {
+            this.dashboardService
+                .getOneById(+params['id'])
+                .subscribe(project => {
+                    this.dashboardService.currentDisplayedDashboardValue = project;
+                });
         });
 
-    this.activatedRoute.params.subscribe(params => this.projectId = params['id']);
-    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+        this.dashboardService.currentDisplayedDashboard$
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe(project => {
+                this.project$ = of(project);
+                if (project != null) {
+                    this.projectId = project.id;
+                }
+            });
 
-      this.dashboardService
-          .dashboardsSubject
-          .pipe(takeWhile(() => this.isAlive))
-          .subscribe(projects => {
-              this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
-          });
+        this.activatedRoute.params.subscribe(params => this.projectId = params['id']);
+        this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
 
+        this.dashboardService.currentDashboardList$
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe(projects => {
+                this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+            });
 
-    // this.dashboardService
-    //     .currentSlideSubject
-    //     .pipe(takeWhile(() => this.isAlive))
-    //     .subscribe(currentSlide => {
-    //       //   console.log('SERVICE CALLED');
-    //       // if (currentSlide !== null) {
-    //       //     let index = this.findChildWithId(this.childs, currentSlide.id);
-    //       //     console.log('CURRENT SLIDE : ' + currentSlide.name + ' (index ' + index + ')');
-    //       //     this.childs[index] = currentSlide;
-    //       //     this.dashboardRotation.slideName.nativeElement.innerHTML = currentSlide.name;
-    //       //     this.dashboardRotation.slideCircles.nativeElement.children[index].nativeElement.src = '../../../../assets/images/current-slide-blue.png';
-    //       //     index = this.findChildWithId(this.dashboardService.dashboardsSubject, currentSlide.id);
-    //       //     this.dashboardService.dashboardsSubject[index] = currentSlide;
-    //       //     console.log('DONE');
-    //       // }
-    //     });
-  }
+        this.dashboardService
+            .currentSlideSubject
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe((project) => {
+                // if (project) {
+                //     console.log('SLIDE : ' + project.name);
+                // }
+            });
+    }
 
-    this.dashboardService
-        .currentSlideSubject
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((project) => {
-            // if (project) {
-            //     console.log('SLIDE : ' + project.name);
-            // }
+    get setConnectionDoneFunc() {
+        return this.setConnectionDone.bind(this);
+    }
+
+    setConnectionDone() {
+        this.connectionDone = true;
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * The add widget dialog ref
+     */
+    openAddWidgetDialog() {
+        this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+            minWidth: 900,
+            minHeight: 500,
         });
+    }
 
-  }
-
-  get setConnectionDoneFunc() {
-      return this.setConnectionDone.bind(this);
-  }
-
-  setConnectionDone() {
-      this.connectionDone = true;
-      this.changeDetectorRef.detectChanges();
-  }
-
-  /**
-   * The add widget dialog ref
-   */
-  openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      minHeight: 500,
-    });
-  }
-
-  /**
-   * When the component is destroyed
-   */
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
+    /**
+     * When the component is destroyed
+     */
+    ngOnDestroy() {
+        this.isAlive = false;
+    }
 
 }

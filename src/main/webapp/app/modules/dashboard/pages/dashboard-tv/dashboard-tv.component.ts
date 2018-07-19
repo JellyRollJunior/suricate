@@ -30,7 +30,6 @@ import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateTyp
 import {SettingsService} from '../../../../shared/services/settings.service';
 import {UserService} from '../../../security/user/user.service';
 import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
-import {ThemeService} from '../../../shared/services/theme.service';
 
 import * as Stomp from '@stomp/stompjs';
 
@@ -39,30 +38,30 @@ import * as Stomp from '@stomp/stompjs';
  * Dashboard TV Management
  */
 @Component({
-  selector: 'app-code-view',
-  templateUrl: './dashboard-tv.component.html',
-  styleUrls: ['./dashboard-tv.component.css']
+    selector: 'app-code-view',
+    templateUrl: './dashboard-tv.component.html',
+    styleUrls: ['./dashboard-tv.component.css']
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
 
-  /**
-   * Tell if the component is displayed
-   * @type {boolean}
-   * @private
-   */
-  private isAlive = true;
-  /**
-   * The screen subscription (Code View)
-   * @type {Subscription}
-   * @private
-   */
-  private screenSubscription: Subscription;
+    /**
+     * Tell if the component is displayed
+     * @type {boolean}
+     * @private
+     */
+    private isAlive = true;
+    /**
+     * The screen subscription (Code View)
+     * @type {Subscription}
+     * @private
+     */
+    private screenSubscription: Subscription;
 
-  /**
-   * The project as observable
-   * @type {Observable<Project>}
-   */
-  project$: Observable<Project>;
+    /**
+     * The project as observable
+     * @type {Observable<Project>}
+     */
+    project$: Observable<Project>;
 
     /**
      * The current project id
@@ -74,75 +73,70 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
      */
     childs: Project[];
 
-  /**
-   * The screen code to display
-   * @type {number}
-   */
-  screenCode: number;
-
-  /**
-   * The screen subscription (Code View)
-   */
-  screenSubscription: Subscription;
+    /**
+     * The screen code to display
+     * @type {number}
+     */
+    screenCode: number;
 
     /**
      * Tell if the connection is done with the backend
      */
     connectionDone = false;
 
-  /**
-   * The constructor
-   *
-   * @param {SidenavService} sidenavService The sidenav service to inject
-   * @param {DashboardService} dashboardService The dashboard service to inject
-   * @param {WebsocketService} websocketService The websocket service to inject
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector to inject
-   * @param {SettingsService} settingsService The settings service
-   * @param {UserService} userService The user service
-   */
-  constructor(private sidenavService: SidenavService,
-              private dashboardService: DashboardService,
-              private websocketService: WebsocketService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private changeDetectorRef: ChangeDetectorRef,
-              private settingsService: SettingsService,
-              private userService: UserService) {
-  }
+    /**
+     * The constructor
+     *
+     * @param {SidenavService} sidenavService The sidenav service to inject
+     * @param {DashboardService} dashboardService The dashboard service to inject
+     * @param {WebsocketService} websocketService The websocket service to inject
+     * @param {ActivatedRoute} activatedRoute The activated route service
+     * @param {Router} router The router service
+     * @param {ChangeDetectorRef} changeDetectorRef The change detector to inject
+     * @param {SettingsService} settingsService The settings service
+     * @param {UserService} userService The user service
+     */
+    constructor(private sidenavService: SidenavService,
+                private dashboardService: DashboardService,
+                private websocketService: WebsocketService,
+                private activatedRoute: ActivatedRoute,
+                private router: Router,
+                private changeDetectorRef: ChangeDetectorRef,
+                private settingsService: SettingsService,
+                private userService: UserService) {
+    }
 
-  /**
-   * Init of the component
-   */
-  ngOnInit() {
-    setTimeout(() => this.themeService.currentTheme = 'dark-theme', 0);
-    this.sidenavService.closeSidenav();
-    this.screenCode = this.websocketService.getscreenCode();
+    /**
+     * Init of the component
+     */
+    ngOnInit() {
+        setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 0);
+        this.sidenavService.closeSidenav();
+        this.screenCode = this.websocketService.getscreenCode();
 
-      this.dashboardService.currentDisplayedDashboard$
-          .pipe(takeWhile(() => this.isAlive))
-          .subscribe(project => this.project$ = of(project));
+        this.dashboardService.currentDisplayedDashboard$
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe(project => this.project$ = of(project));
 
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['token']) {
-        this.dashboardService.getOneByToken(params['token']).subscribe(project => {
-            this.dashboardService.currentDisplayedDashboardValue = project;
-            this.project$ = of(project);
-            this.projectId = project.id;
-            if (project.projectType === ProjectType.SLIDESHOW) {
-                this.dashboardService.getAllForCurrentUser().subscribe((projects) => {
-                    this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+        this.activatedRoute.queryParams.subscribe(params => {
+            if (params['token']) {
+                this.dashboardService.getOneByToken(params['token']).subscribe(project => {
+                    this.dashboardService.currentDisplayedDashboardValue = project;
+                    this.project$ = of(project);
+                    this.projectId = project.id;
+                    if (project.projectType === ProjectType.SLIDESHOW) {
+                        this.dashboardService.getAllForCurrentUser().subscribe((projects) => {
+                            this.childs = this.dashboardService.getSlidesByParentId(this.projectId);
+                        });
+                    }
                 });
+
+            } else {
+                this.dashboardService.currentDisplayedDashboardValue = null;
+                this.listenForConnection();
             }
         });
-
-      } else {
-        this.dashboardService.currentDisplayedDashboardValue = null;
-        this.listenForConnection();
-      }
-    });
-  }
+    }
 
 
     get setConnectionDoneFunc() {
@@ -156,56 +150,55 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     }
 
 
+    /**
+     * When on code view screen we wait for new connection
+     */
+    listenForConnection() {
+        this.websocketService.startConnection();
+        this.screenSubscription = this
+            .websocketService
+            .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe((stompMessage: Stomp.Message) => {
+                this.handleConnectEvent(JSON.parse(stompMessage.body));
+            });
+    }
 
-   /**
-   * When on code view screen we wait for new connection
-   */
-  listenForConnection() {
-    this.websocketService.startConnection();
-    this.screenSubscription = this
-        .websocketService
-        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((stompMessage: Stomp.Message) => {
-          this.handleConnectEvent(JSON.parse(stompMessage.body));
-        });
-  }
+    /**
+     * Handle the connection event
+     *
+     * @param {WSUpdateEvent} updateEvent Update event
+     */
+    handleConnectEvent(updateEvent: WSUpdateEvent) {
+        if (updateEvent.type === WSUpdateType.CONNECT) {
+            const project: Project = updateEvent.content;
 
-  /**
-   * Handle the connection event
-   *
-   * @param {WSUpdateEvent} updateEvent Update event
-   */
-  handleConnectEvent(updateEvent: WSUpdateEvent) {
-    if (updateEvent.type === WSUpdateType.CONNECT) {
-      const project: Project = updateEvent.content;
+            if (project) {
+                this.unsubscribeListening();
+                this.websocketService.disconnect();
+                this.router.navigate(['/tv'], {queryParams: {token: project.token}});
+            }
+        }
+    }
 
-      if (project) {
+    /**
+     * Unsubscribe to the listening event
+     */
+    unsubscribeListening() {
+        if (this.screenSubscription) {
+            this.screenSubscription.unsubscribe();
+        }
+    }
+
+    /**
+     * When the component is destroyed
+     */
+    ngOnDestroy() {
+        this.settingsService.initUserThemeSetting(this.userService.connectedUser);
+        this.isAlive = false;
+        this.sidenavService.openSidenav();
+
         this.unsubscribeListening();
         this.websocketService.disconnect();
-        this.router.navigate(['/tv'], {queryParams: {token: project.token}});
-      }
     }
-  }
-
-  /**
-   * Unsubscribe to the listening event
-   */
-  unsubscribeListening() {
-    if (this.screenSubscription) {
-      this.screenSubscription.unsubscribe();
-    }
-  }
-
-  /**
-   * When the component is destroyed
-   */
-  ngOnDestroy() {
-    this.settingsService.initUserThemeSetting(this.userService.connectedUser);
-    this.isAlive = false;
-    this.sidenavService.openSidenav();
-
-    this.unsubscribeListening();
-    this.websocketService.disconnect();
-  }
 }

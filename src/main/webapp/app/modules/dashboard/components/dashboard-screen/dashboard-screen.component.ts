@@ -19,7 +19,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ElementRef, EventEmitter,
+    ElementRef,
     Input,
     OnChanges,
     OnDestroy,
@@ -59,26 +59,26 @@ import * as Stomp from '@stomp/stompjs';
 })
 export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
-  /**
-   * The project to display
-   * @type {Project}
-   */
-  @Input() project: Project;
-  /**
-   * Tell if the dashboard should be on readOnly or not
-   * @type {boolean}
-   */
-  @Input() readOnly = true;
-  /**
-   * The screen code
-   * @type {number}
-   */
-  @Input() screenCode: number;
-  /**
-   * The list of projectWidgets rendered by the ngFor
-   * @type {QueryList<any>}
-   */
-  @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
+    /**
+     * The project to display
+     * @type {Project}
+     */
+    @Input() project: Project;
+    /**
+     * Tell if the dashboard should be on readOnly or not
+     * @type {boolean}
+     */
+    @Input() readOnly = true;
+    /**
+     * The screen code
+     * @type {number}
+     */
+    @Input() screenCode: number;
+    /**
+     * The list of projectWidgets rendered by the ngFor
+     * @type {QueryList<any>}
+     */
+    @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
 
   /**
    * Used for keep the subscription of subjects/Obsevables open

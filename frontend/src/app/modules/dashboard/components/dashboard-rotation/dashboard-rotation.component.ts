@@ -1,34 +1,30 @@
 import {
-    AfterViewInit, ChangeDetectorRef,
+    AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChildren,
     Directive,
-    ElementRef, EventEmitter,
-    Inject,
+    ElementRef,
     Input,
-    OnInit, Output,
     QueryList,
-    TemplateRef,
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { animate, AnimationBuilder, AnimationFactory, AnimationPlayer, style } from '@angular/animations';
+import {animate, AnimationBuilder, AnimationFactory, AnimationPlayer, style} from '@angular/animations';
 import {DashboardRotationItemDirective} from './dashboard-rotation-item.directive';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatButtonModule} from '@angular/material/button';
 import {AddDashboardDialogComponent} from '../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Project} from '../../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
 
 @Directive({
     selector: '.carousel-item'
 })
-export class CarouselItemElement {}
+export class CarouselItemElement {
+}
 
 @Component({
     selector: 'app-dashboard-rotation',
@@ -38,7 +34,7 @@ export class CarouselItemElement {}
 })
 export class DashboardRotationComponent implements AfterViewInit {
     @ContentChildren(DashboardRotationItemDirective) items: QueryList<DashboardRotationItemDirective>;
-    @ViewChildren(CarouselItemElement, { read: ElementRef }) private itemsElements: QueryList<ElementRef>;
+    @ViewChildren(CarouselItemElement, {read: ElementRef}) private itemsElements: QueryList<ElementRef>;
     @ViewChild('carousel') private carousel: ElementRef;
     @ViewChild('slidecircles') slideCircles: ElementRef;
     @ViewChild('slideName') slideName: ElementRef;
@@ -64,13 +60,16 @@ export class DashboardRotationComponent implements AfterViewInit {
      */
     isAlive = true;
 
-    constructor( private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService, private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(private builder: AnimationBuilder, private matDialog: MatDialog, private dashboardService: DashboardService, private changeDetectorRef: ChangeDetectorRef) {
+    }
 
     playHandler() {
         this.autoPlay = !this.autoPlay;
         if (this.autoPlay) { //CHECKBOX CHECKED
             this.cpt = 0;
-            this.sub = Observable.interval(10000).subscribe((val) => { this.handleNext(); });
+            this.sub = Observable.interval(10000).subscribe((val) => {
+                this.handleNext();
+            });
         } else { //CHECKBOX UNCHECKED
             this.sub.unsubscribe();
         }
@@ -80,7 +79,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     next() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
-        if ( this.currentSlide + 1 === this.childs.length ) {
+        if (this.currentSlide + 1 === this.childs.length) {
             offset = 0;
             this.currentSlide = 0;
         } else {
@@ -151,9 +150,9 @@ export class DashboardRotationComponent implements AfterViewInit {
         });
     }
 
-    private buildAnimation( offset ) {
+    private buildAnimation(offset) {
         return this.builder.build([
-            animate(this.timing, style({ transform: `translateX(-${offset}px)` }))
+            animate(this.timing, style({transform: `translateX(-${offset}px)`}))
         ]);
     }
 
@@ -166,7 +165,7 @@ export class DashboardRotationComponent implements AfterViewInit {
     prev() {
         this.slideCircles.nativeElement.children[this.currentSlide].src = '../../../../../assets/images/slide.png';
         let offset;
-        if ( this.currentSlide === 0 ) {
+        if (this.currentSlide === 0) {
             offset = (this.childs.length - 1) * (this.itemWidth);
             this.currentSlide = this.childs.length - 1;
         } else {
@@ -178,11 +177,10 @@ export class DashboardRotationComponent implements AfterViewInit {
     }
 
 
-
     ngAfterViewInit() {
 
         this.dashboardService
-            .currendDashbordSubject
+            .currentDisplayedDashboard$
             .pipe(takeWhile(() => this.isAlive))
             .subscribe(project => {
 
@@ -199,7 +197,7 @@ export class DashboardRotationComponent implements AfterViewInit {
                         this.slideName.nativeElement.innerHTML = '';
                     }
                 }, 100);
-        });
+            });
 
         setTimeout(() => {
             if (!this.showControls) {
@@ -224,7 +222,9 @@ export class DashboardRotationComponent implements AfterViewInit {
         //INITIAL CONDITIONS
         this.sub = Observable.interval(10000)
             .pipe(takeWhile(() => this.isAlive))
-            .subscribe((val) => { this.handleNext(); });
+            .subscribe((val) => {
+                this.handleNext();
+            });
     }
 
     /**

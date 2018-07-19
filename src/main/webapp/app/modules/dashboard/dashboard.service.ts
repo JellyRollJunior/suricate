@@ -142,9 +142,7 @@ export class DashboardService {
     // Initialize search index
     let indexOfCurrentProject = -1;
 
-    if (this.currentDashboardListValues != null) {
-      indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
-    }
+    if (this.currentDashboardListValues != null) { indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);}
 
     if (indexOfCurrentProject >= 0) {
       this.currentDashboardListValues.splice(indexOfCurrentProject, 1);
@@ -436,18 +434,19 @@ export class DashboardService {
    * @param {Project[]} projects The list of projects to sort
    */
   sortByProjectName(projects: Project[]): Project[] {
-    if (projects === null) {
+    if (projects=== null) {
       return projects;
-    }
-    return projects.sort((left, right): number => {
-      if (left.name < right.name) {
-        return -1;
-      }
-      if (left.name > right.name) {
-        return 1;
-      }
-      return 0;
-    });
+
+}
+      return projects.sort((left, right): number => {
+          if (left.name < right.name) {
+              return -1;
+          }
+          if (left.name > right.name) {
+              return 1;
+          }
+          return 0;
+      });
   }
 
   getAllProjectsExceptSlides(projects: Project[]): Project[] {
