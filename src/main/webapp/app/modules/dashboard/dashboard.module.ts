@@ -18,6 +18,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../shared/shared.module';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 import {DashboardService} from './dashboard.service';
 import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
@@ -36,37 +37,37 @@ import {LayoutModule} from '../../layout/layout.module';
 import {DashboardRoutes} from './dashboard.route';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(DashboardRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    DashboardDetailComponent,
-    DashboardListComponent,
-    DashboardEditComponent,
-    DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
-    EditProjectWidgetDialogComponent,
-    DashboardScreenComponent,
-    DashboardTvComponent,
-    DashboardRotationComponent,
-    DashboardRotationItemDirective,
-    CarouselItemElement
-  ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    DashboardService,
-    ScreenService
-  ],
-  entryComponents: [
-    DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
-    EditProjectWidgetDialogComponent
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(DashboardRoutes),
+        LayoutModule,
+        SharedModule
+    ],
+    declarations: [
+        DashboardDetailComponent,
+        DashboardListComponent,
+        DashboardEditComponent,
+        DeleteDashboardDialogComponent,
+        DeleteProjectWidgetDialogComponent,
+        EditProjectWidgetDialogComponent,
+        DashboardScreenComponent,
+        DashboardTvComponent,
+        DashboardRotationComponent,
+        DashboardRotationItemDirective,
+        CarouselItemElement
+    ],
+    exports: [
+        RouterModule
+    ],
+    providers: [
+        DashboardService,
+        ScreenService
+    ],
+    entryComponents: [
+        DeleteDashboardDialogComponent,
+        DeleteProjectWidgetDialogComponent,
+        EditProjectWidgetDialogComponent
+    ]
 })
 export class DashboardModule {
 }

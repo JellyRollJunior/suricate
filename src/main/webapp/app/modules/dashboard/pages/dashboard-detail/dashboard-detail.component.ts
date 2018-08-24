@@ -23,9 +23,9 @@ import {takeWhile} from 'rxjs/operators';
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
-import {DashboardRotationComponent} from '../components/dashboard-rotation/dashboard-rotation.component';
-import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
-import {DashboardScreenComponent} from '../components/dashboard-screen/dashboard-screen.component';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
+import {DashboardRotationComponent} from '../../components/dashboard-rotation/dashboard-rotation.component';
+import {DashboardScreenComponent} from '../../components/dashboard-screen/dashboard-screen.component';
 
 /**
  * Component that display a specific dashboard

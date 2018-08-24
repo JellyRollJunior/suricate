@@ -27,6 +27,7 @@ import {PagesHeaderComponent} from './header/pages/pages-header.component';
 import {SidenavComponent} from './sidenav/pages/sidenav.component';
 import {SidenavService} from './sidenav/sidenav.service';
 import {RepositoryActionsComponent} from './header/components/repository-actions/repository-actions.component';
+import {CopyDashboardDialogComponent} from './header/components/copy-dashboard-dialog/copy-dashboard-dialog.component';
 
 @NgModule({
   imports: [
@@ -42,10 +43,12 @@ import {RepositoryActionsComponent} from './header/components/repository-actions
     TvManagementDialogComponent,
     WidgetListActionsComponent,
     RepositoryActionsComponent
+    CopyDashboardDialogComponent
   ],
   entryComponents: [
     AddWidgetDialogComponent,
     TvManagementDialogComponent
+    CopyDashboardDialogComponent
   ],
   exports: [
     AddWidgetDialogComponent,

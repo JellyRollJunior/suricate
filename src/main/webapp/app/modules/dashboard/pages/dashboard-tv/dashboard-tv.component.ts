@@ -16,7 +16,7 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, of, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
@@ -29,9 +29,9 @@ import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {SettingsService} from '../../../../shared/services/settings.service';
 import {UserService} from '../../../security/user/user.service';
-import {ProjectType} from '../../../shared/model/dto/enums/ProjectType';
 
 import * as Stomp from '@stomp/stompjs';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
 
 
 /**
@@ -80,28 +80,23 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     screenCode: number;
 
     /**
-     * Tell if the connection is done with the backend
-     */
-    connectionDone = false;
-
-    /**
      * The constructor
      *
      * @param {SidenavService} sidenavService The sidenav service to inject
      * @param {DashboardService} dashboardService The dashboard service to inject
      * @param {WebsocketService} websocketService The websocket service to inject
+     * @param {SettingsService} themeService The theme service
      * @param {ActivatedRoute} activatedRoute The activated route service
      * @param {Router} router The router service
-     * @param {ChangeDetectorRef} changeDetectorRef The change detector to inject
      * @param {SettingsService} settingsService The settings service
      * @param {UserService} userService The user service
      */
     constructor(private sidenavService: SidenavService,
                 private dashboardService: DashboardService,
                 private websocketService: WebsocketService,
+                private themeService: SettingsService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
-                private changeDetectorRef: ChangeDetectorRef,
                 private settingsService: SettingsService,
                 private userService: UserService) {
     }
@@ -110,7 +105,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
      * Init of the component
      */
     ngOnInit() {
-        setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 0);
+        setTimeout(() => this.themeService.currentTheme = 'dark-theme', 0);
         this.sidenavService.closeSidenav();
         this.screenCode = this.websocketService.getscreenCode();
 
@@ -136,17 +131,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
                 this.listenForConnection();
             }
         });
-    }
-
-
-    get setConnectionDoneFunc() {
-        return this.setConnectionDone.bind(this);
-    }
-
-
-    setConnectionDone() {
-        this.connectionDone = true;
-        this.changeDetectorRef.detectChanges();
     }
 
 

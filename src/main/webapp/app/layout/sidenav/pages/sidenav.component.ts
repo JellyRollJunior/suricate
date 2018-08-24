@@ -30,120 +30,120 @@ import {AuthenticationService} from '../../../modules/authentication/authenticat
  * Hold the sidenav behavior
  */
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.css']
+    selector: 'app-sidenav',
+    templateUrl: './sidenav.component.html',
+    styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  /**
-   * The html sidenav
-   * @type {MatSidenav}
-   */
-  @ViewChild('sidenav') sidenav: MatSidenav;
+    /**
+     * The html sidenav
+     * @type {MatSidenav}
+     */
+    @ViewChild('sidenav') sidenav: MatSidenav;
 
-  /**
-   * Used for close the observable subscription
-   * @type {boolean}
-   * @private
-   */
-  private isAlive = true;
+    /**
+     * Used for close the observable subscription
+     * @type {boolean}
+     * @private
+     */
+    private isAlive = true;
 
-  /**
-   * The connected user
-   * @type {User}
-   */
-  connectedUser: User;
+    /**
+     * The connected user
+     * @type {User}
+     */
+    connectedUser: User;
 
-  /**
-   * True if the user is admin
-   * @type {boolean}
-   */
-  isUserAdmin: boolean;
+    /**
+     * True if the user is admin
+     * @type {boolean}
+     */
+    isUserAdmin: boolean;
 
-  /**
-   * The list of dashboards
-   * @type {Project[]}
-   */
-  dashboards: Project[];
+    /**
+     * The list of dashboards
+     * @type {Project[]}
+     */
+    dashboards: Project[];
 
-  /**
-   * Constructor
-   *
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {UserService} userService The user service
-   * @param {AuthenticationService} authenticationService The authentication service
-   * @param {SidenavService} sidenavService The sidenav service
-   */
-  constructor(private router: Router,
-              private changeDetectorRef: ChangeDetectorRef,
-              private dashboardService: DashboardService,
-              private userService: UserService,
-              private authenticationService: AuthenticationService,
-              private sidenavService: SidenavService) {
-  }
+    /**
+     * Constructor
+     *
+     * @param {Router} router The router service
+     * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+     * @param {DashboardService} dashboardService The dashboard service
+     * @param {UserService} userService The user service
+     * @param {AuthenticationService} authenticationService The authentication service
+     * @param {SidenavService} sidenavService The sidenav service
+     */
+    constructor(private router: Router,
+                private changeDetectorRef: ChangeDetectorRef,
+                private dashboardService: DashboardService,
+                private userService: UserService,
+                private authenticationService: AuthenticationService,
+                private sidenavService: SidenavService) {
+    }
 
-  /**
-   * Init objects
-   */
-  ngOnInit() {
-    this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(projects => {
-          this.dashboards = this.dashboardService.sortByProjectName(this.dashboardService.getAllProjectsExceptSlides(projects));
-        });
+    /**
+     * Init objects
+     */
+    ngOnInit() {
+        this.dashboardService.currentDashboardList$
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe(projects => {
+                this.dashboards = this.dashboardService.sortByProjectName(this.dashboardService.getAllProjectsExceptSlides(projects));
+            });
 
-    this.userService.connectedUser$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(connectedUser => {
-          this.connectedUser = connectedUser;
-        });
+        this.userService.connectedUser$
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe(connectedUser => {
+                this.connectedUser = connectedUser;
+            });
 
-    this.userService.getConnectedUser().subscribe();
-    this.isUserAdmin = this.userService.isAdmin();
-    this.dashboardService.getAllForCurrentUser().subscribe();
-  }
+        this.userService.getConnectedUser().subscribe();
+        this.isUserAdmin = this.userService.isAdmin();
+        this.dashboardService.getAllForCurrentUser().subscribe();
+    }
 
-  /**
-   * Called when the view has been init
-   */
-  ngAfterViewInit() {
-    this.sidenavService
-        .subscribeToSidenavOpenCloseEvent()
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((shouldOpen: boolean) => {
-          if (shouldOpen) {
-            this.sidenav.open();
-          } else {
-            this.sidenav.close();
-          }
-        });
-  }
+    /**
+     * Called when the view has been init
+     */
+    ngAfterViewInit() {
+        this.sidenavService
+            .subscribeToSidenavOpenCloseEvent()
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe((shouldOpen: boolean) => {
+                if (shouldOpen) {
+                    this.sidenav.open();
+                } else {
+                    this.sidenav.close();
+                }
+            });
+    }
 
-  /**
-   * Retrieve the initials of the connected user
-   *
-   * @returns {string} The initials
-   */
-  getConnectedUserInitial(): string {
-    return this.userService.getUserInitial(this.connectedUser);
-  }
+    /**
+     * Retrieve the initials of the connected user
+     *
+     * @returns {string} The initials
+     */
+    getConnectedUserInitial(): string {
+        return this.userService.getUserInitial(this.connectedUser);
+    }
 
-  /**
-   * Logout the user
-   */
-  logout(): void {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }
+    /**
+     * Logout the user
+     */
+    logout(): void {
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
+    }
 
-  /**
-   * Called when the component is destoyed
-   * All the subscriptions are closed
-   */
-  ngOnDestroy() {
-    this.isAlive = false;
-  }
+    /**
+     * Called when the component is destoyed
+     * All the subscriptions are closed
+     */
+    ngOnDestroy() {
+        this.isAlive = false;
+    }
 }

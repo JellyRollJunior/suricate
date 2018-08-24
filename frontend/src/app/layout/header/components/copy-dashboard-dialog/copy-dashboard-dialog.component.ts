@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
-import {DashboardService} from '../../../dashboard/dashboard.service';
+import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';

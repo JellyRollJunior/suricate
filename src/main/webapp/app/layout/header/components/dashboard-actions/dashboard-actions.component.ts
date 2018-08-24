@@ -24,8 +24,8 @@ import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management
 import {ScreenService} from '../../../../modules/dashboard/screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/dto/Project';
-import {ProjectType} from '../../../../model/dto/enums/ProjectType';
-import {CopyDashboardDialogComponent} from '../../../../../modules/home/components/copy-dashboard-dialog/copy-dashboard-dialog.component';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
+import {CopyDashboardDialogComponent} from '../copy-dashboard-dialog/copy-dashboard-dialog.component';
 
 /**
  * Hold the header dashboard actions

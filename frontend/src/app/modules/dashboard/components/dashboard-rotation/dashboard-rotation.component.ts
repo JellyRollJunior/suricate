@@ -14,11 +14,11 @@ import {animate, AnimationBuilder, AnimationFactory, AnimationPlayer, style} fro
 import {DashboardRotationItemDirective} from './dashboard-rotation-item.directive';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
-import {AddDashboardDialogComponent} from '../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Project} from '../../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
+import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 
 @Directive({
     selector: '.carousel-item'
@@ -70,7 +70,7 @@ export class DashboardRotationComponent implements AfterViewInit {
             this.sub = Observable.interval(10000).subscribe((val) => {
                 this.handleNext();
             });
-        } else { //CHECKBOX UNCHECKED
+        } else { // CHECKBOX UNCHECKED
             this.sub.unsubscribe();
         }
     }

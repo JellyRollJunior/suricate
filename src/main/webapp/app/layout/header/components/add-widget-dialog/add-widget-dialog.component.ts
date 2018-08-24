@@ -27,7 +27,7 @@ import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVaria
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
-import {ProjectType} from '../../../../model/dto/enums/ProjectType';
+import {ProjectType} from '../../../../shared/model/dto/enums/ProjectType';
 
 /**
  * Dialog used to add a widget
