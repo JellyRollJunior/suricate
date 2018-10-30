@@ -3,9 +3,8 @@
      "type": "maven", 
      "goal": "package -Pbuild-prod -DskipTests" 
     }, 
-    "deploy": { 
-	  "container": "TOMCAT8",
-      "war": [
+    "deploy": {
+      "jarName": [
          {
             "file": "target/suricate.war"
          }
