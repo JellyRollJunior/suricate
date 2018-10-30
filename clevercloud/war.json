@@ -1,0 +1,15 @@
+{ 
+    "build": { 
+     "type": "maven", 
+     "goal": "package -Pbuild-prod -DskipTests" 
+    }, 
+    "deploy": { 
+     "goal": "package -Pbuild-prod -DskipTests", 
+     "container": "TOMCAT8", 
+     "war": [ 
+     { 
+      "file": "target/suricate.war" 
+     } 
+     ] 
+    } 
+} 
