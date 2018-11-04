@@ -1,9 +1,9 @@
-{ 
-    "build": { 
-     "type": "maven", 
-     "goal": "package -Pbuild-prod -DskipTests" 
-    }, 
-    "deploy": { 
-		"goal": "package -Pbuild-prod -DskipTests" 
-    } 
-} 
+{
+  "build": {
+    "type": "maven",
+    "goal": "-Pbuild-prod package -DskipTests"
+  },
+  "deploy": {
+	"jarName": "./target/suricate.war"
+  }
+}
