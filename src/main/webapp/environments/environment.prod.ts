@@ -18,5 +18,5 @@ export const environment = {
   production: true,
     VERSION: require('../../../../package.json').version,
     ENVIRONMENT: require('../../../../package.json').environment,
-    BASE_URL: 'https://suricate.cleverapps.io/'
+    BASE_URL: 'https://suricate.cleverapps.io'
 };
