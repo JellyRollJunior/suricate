@@ -24,6 +24,7 @@ import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public abstract class ProjectWidgetMapper {
     /**
      * The project widget service
      */
-    @Autowired
+    @Autowired @Lazy
     protected ProjectWidgetService projectWidgetService;
 
     /**
